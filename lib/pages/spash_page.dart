@@ -1,8 +1,5 @@
-// lib/pages/splash_page.dart
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:time_gate/themes/app_theme.dart';
 import '../providers/auth_provider.dart';
 
 class SplashPage extends StatefulWidget {
@@ -21,7 +18,7 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> _checkSession() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-
+    await Future.delayed(const Duration(milliseconds: 3000));
     final sessionExists = await authProvider.loadSession();
 
     if (!mounted) return;
@@ -35,7 +32,6 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.secondary,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
