@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:time_gate/themes/custom_styles.dart';
 import 'package:time_gate/utils/responsive_utils.dart';
+import 'package:time_gate/widgets/logout_button.dart';
 import 'package:time_gate/widgets/widgets.dart';
 
 
@@ -94,6 +95,7 @@ class ProfilePage extends StatelessWidget {
                   ),
                 ],
               ),
+              LogoutButton()
               ],
             ),
           ),

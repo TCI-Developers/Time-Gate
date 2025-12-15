@@ -36,11 +36,11 @@ class _SplashPageState extends State<SplashPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image(
-                image: AssetImage('assets/IMAGOTIPO-TIMEGATE.png'),
-                width: 350,
-                height: 350,
-                fit: BoxFit.cover,
+            Image.asset(
+              'assets/IMAGOTIPO-TIMEGATE.png',
+              width: 350,
+              height: 350,
+              fit: BoxFit.cover,
             ),
             const SizedBox(height: 20),
             const CircularProgressIndicator(),

@@ -14,32 +14,41 @@ class LoginPage extends StatelessWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: Center(
-          child: Container(
-            width: maxContainerWidth,
-            padding: const EdgeInsets.only(top: 30, left: 80, right: 80),
-            child: const Column(
-              children: [
-                Image(
-                  image: AssetImage('assets/IMAGOTIPO-TIMEGATE.png'),
-                  width: 350,
-                  height: 350,
-                  fit: BoxFit.cover,
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Iniciar Sesión',
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.secondary,
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Center(
+            child: Container(
+              width: maxContainerWidth,
+              padding: const EdgeInsets.only(top: 30, left: 80, right: 80),
+              child:  Column(
+                children: [
+                  // Image(
+                  //   image: AssetImage('assets/IMAGOTIPO-TIMEGATE.png'),
+                  //   width: 350,
+                  //   height: 350,
+                  //   fit: BoxFit.cover,
+                  // ),
+                  Image.asset(
+                    'assets/IMAGOTIPO-TIMEGATE.png',
+                    width: 350,
+                    height: 350,
+                    fit: BoxFit.cover,
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Iniciar Sesión',
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.secondary,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: 20),
-                FormLogin(),
-              ],
+                  SizedBox(height: 20),
+                  FormLogin(),
+                ],
+              ),
             ),
           ),
         ),
