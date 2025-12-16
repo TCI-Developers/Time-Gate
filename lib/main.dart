@@ -9,43 +9,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import './providers/auth_provider.dart';
 
 
-// void main() => runApp(const MyApp());
-// void main() {
-//   initializeDateFormatting().then((_) => runApp(const MyApp()));
-// }
 
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-   
-//     return MultiProvider(
-//       providers: [
-//         ChangeNotifierProvider(create: (_) => TabbarProvider()),
-//         ChangeNotifierProvider(create: (_) => AuthProvider()),
-//       ],
-//       child: MaterialApp(
-//         title: 'Material App',
-//         debugShowCheckedModeBanner: false,
-//         initialRoute: 'splash',
-//         routes: {
-//           'splash': (_) => const SplashPage(),
-//           'main': (_) => const TabsPage(),
-//           'login': (_) => const LoginPage(),
-//           'vacation request': (_) => const VacationRequestPage(),
-//           'permit application': (_) => const PermitApplicationPage(),
-//         },
-//         onUnknownRoute: (settings) {
-//           return MaterialPageRoute(
-//             builder: (context) => const TabsPage(),
-//           );
-//         },
-//         theme: AppTheme.lightTheme,
-//       ),
-//     );
-//   }
-// }
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -87,7 +51,6 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => TabbarProvider()),
-        // 4. USAMOS .value y nos aseguramos de pasarle el objeto recibido
         ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
       ],
       child: MaterialApp(

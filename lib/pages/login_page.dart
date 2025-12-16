@@ -11,7 +11,6 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double maxContainerWidth = getMaxContentWidth(context);
-
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -22,17 +21,23 @@ class LoginPage extends StatelessWidget {
               padding: const EdgeInsets.only(top: 30, left: 80, right: 80),
               child:  Column(
                 children: [
-                  // Image(
-                  //   image: AssetImage('assets/IMAGOTIPO-TIMEGATE.png'),
-                  //   width: 350,
-                  //   height: 350,
-                  //   fit: BoxFit.cover,
-                  // ),
+                 
                   Image.asset(
                     'assets/IMAGOTIPO-TIMEGATE.png',
                     width: 350,
                     height: 350,
                     fit: BoxFit.cover,
+                    frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                    if (wasSynchronouslyLoaded) return child;
+
+                    return AnimatedOpacity(
+                      opacity: frame == null ? 0 : 1,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeOut,
+                      child: child,
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.error_outline, size: 50),
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
