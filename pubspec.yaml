@@ -40,6 +40,18 @@ dependencies:
   google_fonts: ^6.3.2
   dio: ^5.9.0
   flutter_secure_storage: ^9.0.0
+  flutter_native_splash: ^2.3.0
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/SPLASH-LOGO.png
+  
+  android_gravity: center 
+  ios_content_mode: center
+
+  android_12:
+    image: assets/SPLASH-LOGO.png
+    fullscreen: true
 
 dev_dependencies:
   flutter_test:
