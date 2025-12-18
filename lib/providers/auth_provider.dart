@@ -39,34 +39,34 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> loadSession() async {
-    token = await TokenStorage.getToken();
-
-    if (token != null) {
-      _authService.apiClient.setToken(token!);
-      notifyListeners();
-      return true;
-    }
-    return false;
-  }
-
   // Future<bool> loadSession() async {
-  // token = await TokenStorage.getToken();
+  //   token = await TokenStorage.getToken();
 
-  // if (token == null) return false;
-
-  // _authService.apiClient.setToken(token!);
-
-  // final isValid = await _authService.checkSession();
-
-  // if (!isValid) {
-  //   await logout();
+  //   if (token != null) {
+  //     _authService.apiClient.setToken(token!);
+  //     notifyListeners();
+  //     return true;
+  //   }
   //   return false;
   // }
 
-  // notifyListeners();
-  // return true;
-  // }
+  Future<bool> loadSession() async {
+  token = await TokenStorage.getToken();
+
+  if (token == null) return false;
+
+  _authService.apiClient.setToken(token!);
+
+  final isValid = await _authService.checkSession();
+
+  if (!isValid) {
+    await logout();
+    return false;
+  }
+
+  notifyListeners();
+  return true;
+  }
 
   Future<void> logout() async {
     token = null;

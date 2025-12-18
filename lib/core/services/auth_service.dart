@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import '../network/api_client.dart';
 
 class AuthService {
-  final ApiClient apiClient = ApiClient(baseUrl: 'https://70e740374300.ngrok-free.app/api/');
+  final ApiClient apiClient = ApiClient(baseUrl: 'https://ef1c26e82df2.ngrok-free.app/api/');
 
   Future<Map<String, dynamic>> login(String email, String password) async {
     try {
@@ -12,6 +12,18 @@ class AuthService {
       });
 
       return response.data;
+    } on DioException catch (e) {
+      final msg = e.response?.data["message"] ?? "Error de conexión";
+      throw Exception(msg);
+    }
+  }
+
+  Future<bool> checkSession() async{
+    try {
+      final response = await apiClient.get('auth-token');
+      if(response.data['message']=="ok")return true;
+      return false;
+      
     } on DioException catch (e) {
       final msg = e.response?.data["message"] ?? "Error de conexión";
       throw Exception(msg);
