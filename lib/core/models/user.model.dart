@@ -52,7 +52,7 @@ class UserProfile {
       nss: json['nss'],
       curp: json['curp'],
       rfc: json['rfc'],
-      profilePhotoUrl: json['profile_photo_url'],
+      profilePhotoUrl: json['profile_photo_path'],
     );
   }
 }

@@ -3,9 +3,7 @@ import 'package:time_gate/core/models/user.model.dart';
 import 'package:time_gate/core/network/api_client.dart';
 
 class DataService {
-  final ApiClient apiClient = ApiClient(
-    baseUrl: 'https://38c3d72d2c20.ngrok-free.app/api',
-  );
+  final ApiClient apiClient = ApiClient();
 
   Future<UserProfile> getUserProfile() async {
     try {
