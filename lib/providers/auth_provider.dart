@@ -19,15 +19,11 @@ class AuthProvider with ChangeNotifier {
       if (!data.containsKey("token")) {
         throw Exception("Token no encontrado");
       }
-
       token = data["token"];
-
       // Guardar token
       await TokenStorage.saveToken(token!);
-
       // Set en ApiClient para futuras peticiones
       _authService.apiClient.setToken(token!);
-
       errorMessage = null;
       return true;
     } catch (e) {
@@ -38,17 +34,6 @@ class AuthProvider with ChangeNotifier {
       notifyListeners();
     }
   }
-
-  // Future<bool> loadSession() async {
-  //   token = await TokenStorage.getToken();
-
-  //   if (token != null) {
-  //     _authService.apiClient.setToken(token!);
-  //     notifyListeners();
-  //     return true;
-  //   }
-  //   return false;
-  // }
 
   Future<bool> loadSession() async {
   token = await TokenStorage.getToken();

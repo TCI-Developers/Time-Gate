@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import '../network/api_client.dart';
 
 class AuthService {
-  final ApiClient apiClient = ApiClient(baseUrl: 'https://ef1c26e82df2.ngrok-free.app/api/');
+  final ApiClient apiClient = ApiClient(baseUrl: 'https://38c3d72d2c20.ngrok-free.app/api/');
 
   Future<Map<String, dynamic>> login(String email, String password) async {
     try {

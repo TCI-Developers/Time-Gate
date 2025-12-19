@@ -1,12 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:time_gate/providers/profile_provider.dart';
 import 'package:time_gate/themes/custom_styles.dart';
 import 'package:time_gate/utils/responsive_utils.dart';
 import 'package:time_gate/widgets/logout_button.dart';
 import 'package:time_gate/widgets/widgets.dart';
+import 'package:provider/provider.dart';
 
 
-class ProfilePage extends StatelessWidget {
+
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ProfileProvider>().loadProfile();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
