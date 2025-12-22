@@ -5,7 +5,7 @@ import 'package:time_gate/widgets/widgets.dart';
 
 class PersonalInfo extends StatelessWidget {
 
-  final String image;
+  final String? image;
   final String name;
   final String jobTitle;
 
@@ -24,7 +24,7 @@ class PersonalInfo extends StatelessWidget {
       children: [
         CirclePhoto(
           maxRadius: 30*fontSizedGrow,
-          image: image,
+          image: image!,
         ),
         const SizedBox(width: 10),
         

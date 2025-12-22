@@ -1,20 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:time_gate/pages/widgets_page/widgets_page.dart';
+import 'package:time_gate/providers/attendance_provider.dart';
 import 'package:time_gate/themes/app_theme.dart';
 import 'package:time_gate/themes/custom_styles.dart';
 import 'package:time_gate/utils/responsive_utils.dart';
 import 'package:time_gate/widgets/widgets.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+
+   @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AttendanceProvider>().loadAttendance();
+    });
+  }
+  @override
   Widget build(BuildContext context) {
+    final attendance = context.watch<AttendanceProvider>();
 
     final double maxContainerWidth = getMaxContentWidth(context);
     final titleOsw30Bold30Secondary = Theme.of(context).textTheme.titleOsw30Bold30Secondary;
     final textJt16bold400Secondary = Theme.of(context).textTheme.textJt16bold400Secondary;
     final fontSizedGrow = getResponsiveScaleFactor(context);
+
+    DateTime fechaActual = DateTime.now();
+    String mesNombre = DateFormat('MMMM', 'es_Es').format(fechaActual).toUpperCase();
+    String anioFormateado = DateFormat('yyyy').format(fechaActual);
+
+    if (attendance.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (attendance.errorMessage != null) {
+      return Center(child: Text(attendance.errorMessage!));
+    }
+
+    if (attendance.user == null) {
+      return const SizedBox(); 
+    }
 
     return SingleChildScrollView(
       padding: const EdgeInsets.only(bottom: 60),
@@ -26,10 +60,10 @@ class HomePage extends StatelessWidget {
               child: Column(
                 spacing: 10,
                 children: [
-                  const PersonalInfo(
-                    image: 'https://upload.wikimedia.org/wikipedia/commons/7/7b/Stan_Lee_by_Gage_Skidmore_3.jpg',
-                    name: 'Alan Alexis Medrano Gomez',
-                    jobTitle: 'Puesto',
+                  PersonalInfo(
+                    image: attendance.user!.profilePhotoPath,
+                    name: attendance.user!.name,
+                    jobTitle: attendance.user!.puesto,
                   ),
                   Align(
                     alignment: AlignmentGeometry.centerLeft,
@@ -84,34 +118,41 @@ class HomePage extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsetsGeometry.only(left:8),
-                          child: Text('JULIO 2025', style: textJt16bold400Secondary.copyWith(
+                          child: Text('$mesNombre $anioFormateado', style: textJt16bold400Secondary.copyWith(
                           fontSize: 16 * fontSizedGrow,
                         ),),
                         ),
                         const SizedBox(height: 5,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            DayOfWeekButton(letterDay: 'LUN',day: '14', indicatorColor: AppTheme.primary,),
-                            DayOfWeekButton(letterDay: 'MAR',day: '15', indicatorColor: AppTheme.red,),
-                            DayOfWeekButton(letterDay: 'MIE',day: '16', indicatorColor: AppTheme.green,),
-                            DayOfWeekButton(letterDay: 'JUE',day: '17', indicatorColor: AppTheme.secondary,),
-                            DayOfWeekButton(letterDay: 'VIE',day: '18', indicatorColor: AppTheme.black,),
-                            DayOfWeekButton(letterDay: 'SAB',day: '19',),
-                            DayOfWeekButton(letterDay: 'DOM',day: '20',),
-                           
-                          ],
+                          children: attendance.days.map((day) {
+                            return DayOfWeekButton(
+                              letterDay: day.day,
+                              day: day.date.split('-').last,
+                              indicatorColor: 
+                                (day.type ?? "").toLowerCase() =="asistencia" ? AppTheme.green
+                                : (day.type ?? "").toLowerCase() =="ausencia" ? AppTheme.red
+                                : (day.type ?? "").toLowerCase() =="vacaciones" ? Colors.amberAccent
+                                : Colors.transparent
+                                
+                            );
+                          }).toList(),
                         )
+
                       ],
                     ),
                   ),
-                  DayOfWeekCard(day: '13',letterDay: 'DOM', status: 'Asistencia', checkIn: '0:00 am', checkOut: '0:00 pm',pausa: '0:00 am',),
-                  DayOfWeekCard(day: '14',letterDay: 'LUN', status: 'Asistencia', checkIn: '0:00 am', checkOut: '0:00 pm',pausa: '0:00 am',),
-                  DayOfWeekCard(day: '15',letterDay: 'MAR', status: 'Asistencia', checkIn: '0:00 am', checkOut: '0:00 pm',pausa: '0:00 am',),
-                  DayOfWeekCard(day: '16',letterDay: 'MIE', status: 'Vacaciones', checkIn: '0:00 am', checkOut: '0:00 pm',pausa: '0:00 am',),
-                  DayOfWeekCard(day: '17',letterDay: 'JUE', status: 'Asistencia', checkIn: '0:00 am', checkOut: '0:00 pm',pausa: '0:00 am',),
-                  DayOfWeekCard(day: '18',letterDay: 'VIE', status: 'Asistencia', checkIn: '0:00 am', checkOut: '0:00 pm',pausa: '0:00 am',),
-                  DayOfWeekCard(day: '19',letterDay: 'SAB', status: 'Ausencia', checkIn: '0:00 am', checkOut: '0:00 pm',pausa: '0:00 am',),
+                  ...attendance.days.map((day) {
+                    return DayOfWeekCard(
+                      day: day.date.split('-').last,
+                      letterDay: day.day,
+                      status: (day.type ?? "No status"),
+                      checkIn: day.checkIn ?? '--',
+                      checkOut: day.checkOut ?? '--',
+                      pausa: day.totalPauseHuman,
+                    );
+                  }),
+
               
                 ],
               )
