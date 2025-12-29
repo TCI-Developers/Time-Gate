@@ -12,7 +12,8 @@ class DayOfWeekCard extends StatelessWidget {
   final String checkOut;
   final String pausa;
 
-  const DayOfWeekCard({super.key, required this.day, required this.letterDay, required this.status, required this.checkIn, required this.checkOut, required this.pausa});
+
+  const DayOfWeekCard({super.key, required this.day, required this.letterDay, required this.status, required this.checkIn, required this.checkOut, required this.pausa,});
   
   @override
   Widget build(BuildContext context) {
@@ -90,11 +91,14 @@ class _DayOfWeekButton extends StatelessWidget {
                   
                   padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                    color: status == 'Asistencia'
+                    color: status == 'asistencia'
                     ? Colors.lightGreen
-                    : status == 'Vacaciones' 
+                    : status == 'vacaciones' 
                         ? Colors.yellow
-                        : AppTheme.red,
+                    : status == 'falta' 
+                        ? AppTheme.red
+                        : Colors.transparent
+                    ,
                     borderRadius: BorderRadius.circular(5)
                   ),
                   child: Text(status, style: textJt16bold400Secondary.copyWith(fontSize: 12*fontSizedGrow),),

@@ -15,10 +15,10 @@ class AuthProvider with ChangeNotifier {
       notifyListeners();
 
       final data = await _authService.login(email, password);
-
       if (!data.containsKey("token")) {
         throw Exception("Token no encontrado");
       }
+      print('no esntre');
       token = data["token"];
       // Guardar token
       await TokenStorage.saveToken(token!);
@@ -37,7 +37,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<bool> loadSession() async {
   token = await TokenStorage.getToken();
-
+  print(token);
   if (token == null) return false;
 
   _authService.apiClient.setToken(token!);

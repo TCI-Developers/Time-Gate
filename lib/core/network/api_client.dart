@@ -1,38 +1,3 @@
-// import 'package:dio/dio.dart';
-
-// class ApiClient {
-//   final Dio _dio;
-
-//   ApiClient({required String baseUrl})
-//       : _dio = Dio(BaseOptions(
-//           baseUrl: baseUrl,
-//           connectTimeout: const Duration(seconds: 10),
-//           receiveTimeout: const Duration(seconds: 10),
-//           headers: {
-//             'Content-Type': 'application/json',
-//           },
-//         ));
-
-//   void setToken(String token) {
-//     _dio.options.headers['Authorization'] = 'Bearer $token';
-//   }
-
-//   Future<Response> get(String endpoint, {Map<String, dynamic>? queryParams}) async {
-//     return await _dio.get(endpoint, queryParameters: queryParams);
-//   }
-
-//   Future<Response> post(String endpoint, Map<String, dynamic> data) async {
-//     return await _dio.post(endpoint, data: data);
-//   }
-
-//   Future<Response> put(String endpoint, Map<String, dynamic> data) async {
-//     return await _dio.put(endpoint, data: data);
-//   }
-
-//   Future<Response> delete(String endpoint) async {
-//     return await _dio.delete(endpoint);
-//   }
-// }
 import 'package:dio/dio.dart';
 
 class ApiClient {
@@ -45,7 +10,7 @@ class ApiClient {
   ApiClient._internal() {
     _dio = Dio(
       BaseOptions(
-        baseUrl: 'https://4a5304e04237.ngrok-free.app/api',
+        baseUrl: 'https://7d890ae67afb.ngrok-free.app/api',
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
         headers: {

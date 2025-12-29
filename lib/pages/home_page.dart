@@ -5,6 +5,7 @@ import 'package:time_gate/pages/widgets_page/widgets_page.dart';
 import 'package:time_gate/providers/attendance_provider.dart';
 import 'package:time_gate/themes/app_theme.dart';
 import 'package:time_gate/themes/custom_styles.dart';
+import 'package:time_gate/utils/dialog_confirmation.dart';
 import 'package:time_gate/utils/responsive_utils.dart';
 import 'package:time_gate/widgets/widgets.dart';
 
@@ -42,10 +43,6 @@ class _HomePageState extends State<HomePage> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (attendance.errorMessage != null) {
-      return Center(child: Text(attendance.errorMessage!));
-    }
-
     if (attendance.user == null) {
       return const SizedBox(); 
     }
@@ -73,13 +70,78 @@ class _HomePageState extends State<HomePage> {
                         )
                     ),
                   ),
-                  Schedules(checkin: '8:00 am', checkout: '8:00 am', pause: '8:00 am / 3:00 pm',),
+                  Schedules(checkin: attendance.user!.horaEntrada, checkout: attendance.user!.horaSalida, pause: '${attendance.user!.horaInicioComida}/ ${attendance.user!.horaFinComida}',),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(child: CheckButton(iconStart: Icons.watch_later_outlined,text: 'Check In',)),
+                      Expanded(
+                        child: CheckButton(
+                          iconStart: Icons.watch_later_outlined,text: 'Check In',
+                          onTap: ()async{
+                            dialogConfirm(
+                              context: context, 
+                              title: 'Check In',
+                              message: '¿Deseas hacer check in?',
+                              onConfirmed: ()async{
+                                final provider = context.read<AttendanceProvider>();
+                                final ok = await provider.checkIn();
+
+                                if (!context.mounted) return;
+                                showDialog(
+                                  context: context, 
+                                  builder: (BuildContext context)=>AlertDialog(
+                                    title: Text(ok ? 'Éxito' : 'Error'),
+                                    content: Text(
+                                      ok ? provider.successMessage! : provider.errorMessage!,
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context), 
+                                        child: const Text('ok'),
+                                      ),
+                                      
+                                    ],
+                                  ),
+                                );
+                              }
+                            );
+                          },),
+                        
+                      ),
                       const SizedBox(width: 10,),
-                      Expanded(child: CheckButton(iconStart: Icons.logout,text: 'Check Out',)), 
+
+                      Expanded(
+                        child: CheckButton(
+                          iconStart: Icons.logout,text: 'Check Out',
+                          onTap: ()async{
+                            dialogConfirm(
+                              context: context, 
+                              title: 'Check Out',
+                              message: '¿Deseas hacer check out?',
+                              onConfirmed: ()async{
+                                final provider = context.read<AttendanceProvider>();
+                                final ok = await provider.checkOut();
+                                if (!context.mounted) return;
+                                showDialog(
+                                  context: context, 
+                                  builder: (BuildContext context)=>AlertDialog(
+                                    title: Text(ok ? 'Éxito' : 'Error'),
+                                    content: Text(
+                                      ok ? provider.successMessage! : provider.errorMessage!,
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context), 
+                                        child: const Text('ok'),
+                                      ),
+                                      
+                                    ],
+                                  ),
+                                );
+                              }
+                            );
+                          }),
+                      ), 
                     ],
                   ),
                   Row(
@@ -96,6 +158,35 @@ class _HomePageState extends State<HomePage> {
                         child: CheckButton(
                           iconStart: Icons.play_circle_outline,
                           text: 'Reanudar',
+                          onTap: ()async{
+                            dialogConfirm(
+                              context: context, 
+                              title: 'Reanudar',
+                              message: '¿Deseas reanudar tu jornada?',
+                              onConfirmed: ()async{
+                                final provider = context.read<AttendanceProvider>();
+                                final ok = await provider.restart();
+
+                                if (!context.mounted) return;
+                                showDialog(
+                                  context: context, 
+                                  builder: (BuildContext context)=>AlertDialog(
+                                    title: Text(ok ? 'Éxito' : 'Error'),
+                                    content: Text(
+                                      ok ? provider.successMessage! : provider.errorMessage!,
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context), 
+                                        child: const Text('ok'),
+                                      ),
+                                      
+                                    ],
+                                  ),
+                                );
+                              }
+                            );
+                          },
                         ),
                       ),
                     ],
@@ -150,6 +241,7 @@ class _HomePageState extends State<HomePage> {
                       checkIn: day.checkIn ?? '--',
                       checkOut: day.checkOut ?? '--',
                       pausa: day.totalPauseHuman,
+                      
                     );
                   }),
 

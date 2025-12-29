@@ -34,4 +34,59 @@ class AttendanceService {
       throw Exception(msg);
     }
   }
+
+  Future<Map<String,dynamic>> checkIn({required String location}) async {
+    final response = await apiClient.post('/checks', 
+      {
+        'data': {
+          'check_in': true,
+          'location': location,
+        }
+      }
+    );
+
+    return response.data;
+  }
+
+
+
+  Future<Map<String,dynamic>> checkOut({required String location}) async {
+    final response = await apiClient.post('/checks', 
+        {
+          'data': {
+            'check_out': true,
+            'location': location,
+          }
+        }
+    );
+
+    return response.data;
+  }
+
+  Future<Map<String, dynamic>> pause({required String activity}) async {
+    final response = await apiClient.post('/checks', 
+        {
+          'data': {
+            'pause': true,
+            'activity': activity,
+          }
+        }
+    );
+
+    return response.data;
+  }
+
+  Future<Map<String, dynamic>> restart() async {
+    final response = await apiClient.post('/checks', 
+        {
+          'data': {
+            'restart': true,
+            'activity': "",
+          }
+        }
+    );
+   
+    return response.data;
+  }
+
 }

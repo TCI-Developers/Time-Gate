@@ -22,7 +22,7 @@ class LogoutButton extends StatelessWidget {
         if (context.mounted) {
           Navigator.pushNamedAndRemoveUntil(
             context,
-            'splash',
+            'login',
             (_) => false,
           );
         }

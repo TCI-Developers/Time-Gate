@@ -8,12 +8,14 @@ class CheckButton extends StatelessWidget {
 
   final Widget? iconEnd; 
   final String text;
+  final VoidCallback? onTap;
 
   const CheckButton({
     super.key,
     required this.iconStart,
     this.iconEnd, 
     required this.text,
+    this.onTap,
   });
 
   @override
@@ -22,39 +24,42 @@ class CheckButton extends StatelessWidget {
     final titleJt18Bold500Secondary = Theme.of(context).textTheme.titleJt18Bold500Secondary;
     final fontSizedGrow = getResponsiveScaleFactor(context);
 
-    return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.primary,
-        borderRadius: BorderRadius.circular(20),
-        
-      ),
-    
-
-      height: 60*fontSizedGrow,
-      padding: const EdgeInsets.all(10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppTheme.primary,
+          borderRadius: BorderRadius.circular(20),
           
-          Icon(iconStart, color: Colors.white, size: 40*fontSizedGrow,),
-          const SizedBox(width: 10,),
-          Expanded(
+        ),
+      
+      
+        height: 60*fontSizedGrow,
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
             
-            child: Text(
-              text,
-              style: titleJt18Bold500Secondary.copyWith(
-                fontSize: 18 *fontSizedGrow
+            Icon(iconStart, color: Colors.white, size: 40*fontSizedGrow,),
+            const SizedBox(width: 10,),
+            Expanded(
+              
+              child: Text(
+                text,
+                style: titleJt18Bold500Secondary.copyWith(
+                  fontSize: 18 *fontSizedGrow
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                textAlign: TextAlign.center,
               ),
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-              textAlign: TextAlign.center,
             ),
-          ),
-
-          if (iconEnd != null) ...[
-            iconEnd!
+      
+            if (iconEnd != null) ...[
+              iconEnd!
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

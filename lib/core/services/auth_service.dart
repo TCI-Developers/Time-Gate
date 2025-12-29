@@ -11,7 +11,6 @@ class AuthService {
         "email": email,
         "password": password,
       });
-
       return response.data;
     } on DioException catch (e) {
       final msg = e.response?.data["message"] ?? "Error de conexión";

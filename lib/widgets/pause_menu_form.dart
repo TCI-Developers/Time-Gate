@@ -14,8 +14,6 @@ class PauseMenuForm extends StatelessWidget {
     Widget menuItem(String text) {
       return InkWell(
         onTap: () {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('Seleccionaste: $text')));
           if (onOptionSelected != null) onOptionSelected!(text);
         },
         child: Padding(
@@ -100,8 +98,6 @@ class PauseMenuForm extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               final text = controller.text.trim();
-              ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Otra razón: $text')));
               if (onSave != null) onSave!(text);
             },
             style: ButtonStyle(
