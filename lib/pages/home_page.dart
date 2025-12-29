@@ -39,218 +39,245 @@ class _HomePageState extends State<HomePage> {
     String mesNombre = DateFormat('MMMM', 'es_Es').format(fechaActual).toUpperCase();
     String anioFormateado = DateFormat('yyyy').format(fechaActual);
 
-    if (attendance.isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    // if (attendance.isLoading) {
+    //   return const Center(child: CircularProgressIndicator());
+    // }
 
+    if (attendance.isLoading && attendance.user == null) {
+    return const Scaffold(
+      body: Center(child: CircularProgressIndicator()),
+    );
+  }
+
+    // if (attendance.user == null) {
+    //   return const SizedBox(); 
+    // }
     if (attendance.user == null) {
-      return const SizedBox(); 
-    }
+    return const Scaffold(
+      body: Center(child: Text("No se pudo cargar la información")),
+    );
+  }
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.only(bottom: 60),
-      child: SafeArea(
-          child: Center(
-            child: Container(
-              width: maxContainerWidth,
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                spacing: 10,
-                children: [
-                  PersonalInfo(
-                    image: attendance.user!.profilePhotoPath,
-                    name: attendance.user!.name,
-                    jobTitle: attendance.user!.puesto,
-                  ),
-                  Align(
-                    alignment: AlignmentGeometry.centerLeft,
-                    child: Text('Bienvenido',
-                        style: titleOsw30Bold30Secondary.copyWith(
-                          fontSize: 30 * fontSizedGrow,
-                        )
-                    ),
-                  ),
-                  Schedules(checkin: attendance.user!.horaEntrada, checkout: attendance.user!.horaSalida, pause: '${attendance.user!.horaInicioComida}/ ${attendance.user!.horaFinComida}',),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: CheckButton(
-                          iconStart: Icons.watch_later_outlined,text: 'Check In',
-                          onTap: ()async{
-                            dialogConfirm(
-                              context: context, 
-                              title: 'Check In',
-                              message: '¿Deseas hacer check in?',
-                              onConfirmed: ()async{
-                                final provider = context.read<AttendanceProvider>();
-                                final ok = await provider.checkIn();
-
-                                if (!context.mounted) return;
-                                showDialog(
-                                  context: context, 
-                                  builder: (BuildContext context)=>AlertDialog(
-                                    title: Text(ok ? 'Éxito' : 'Error'),
-                                    content: Text(
-                                      ok ? provider.successMessage! : provider.errorMessage!,
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () => Navigator.pop(context), 
-                                        child: const Text('ok'),
-                                      ),
-                                      
-                                    ],
-                                  ),
-                                );
-                              }
-                            );
-                          },),
-                        
-                      ),
-                      const SizedBox(width: 10,),
-
-                      Expanded(
-                        child: CheckButton(
-                          iconStart: Icons.logout,text: 'Check Out',
-                          onTap: ()async{
-                            dialogConfirm(
-                              context: context, 
-                              title: 'Check Out',
-                              message: '¿Deseas hacer check out?',
-                              onConfirmed: ()async{
-                                final provider = context.read<AttendanceProvider>();
-                                final ok = await provider.checkOut();
-                                if (!context.mounted) return;
-                                showDialog(
-                                  context: context, 
-                                  builder: (BuildContext context)=>AlertDialog(
-                                    title: Text(ok ? 'Éxito' : 'Error'),
-                                    content: Text(
-                                      ok ? provider.successMessage! : provider.errorMessage!,
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () => Navigator.pop(context), 
-                                        child: const Text('ok'),
-                                      ),
-                                      
-                                    ],
-                                  ),
-                                );
-                              }
-                            );
-                          }),
-                      ), 
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start, 
-                    children: [
-                      Flexible(
-                        flex: 1,
-                        child: PauseSection(),
-                      ),
-                      const SizedBox(width: 10,),
-                      Flexible(
-                        flex: 1,
-                        child: CheckButton(
-                          iconStart: Icons.play_circle_outline,
-                          text: 'Reanudar',
-                          onTap: ()async{
-                            dialogConfirm(
-                              context: context, 
-                              title: 'Reanudar',
-                              message: '¿Deseas reanudar tu jornada?',
-                              onConfirmed: ()async{
-                                final provider = context.read<AttendanceProvider>();
-                                final ok = await provider.restart();
-
-                                if (!context.mounted) return;
-                                showDialog(
-                                  context: context, 
-                                  builder: (BuildContext context)=>AlertDialog(
-                                    title: Text(ok ? 'Éxito' : 'Error'),
-                                    content: Text(
-                                      ok ? provider.successMessage! : provider.errorMessage!,
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () => Navigator.pop(context), 
-                                        child: const Text('ok'),
-                                      ),
-                                      
-                                    ],
-                                  ),
-                                );
-                              }
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: double.infinity,
+    return Stack(
+      children: [
+        RefreshIndicator(
+          onRefresh: ()=>attendance.loadAttendance(),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.only(bottom: 60),
+            child: SafeArea(
+                child: Center(
+                  child: Container(
+                    width: maxContainerWidth,
+                    padding: const EdgeInsets.all(20),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 10,
                       children: [
-                        Padding(
-                          padding: const EdgeInsetsGeometry.only(left: 8),
-                          child: Text(
-                            'Resumen de la semana',
-                            style: titleOsw30Bold30Secondary.copyWith(
-                          fontSize: 30 * fontSizedGrow,
+                        PersonalInfo(
+                          image: attendance.user!.profilePhotoPath,
+                          name: attendance.user!.name,
+                          jobTitle: attendance.user!.puesto,
                         ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                        Align(
+                          alignment: AlignmentGeometry.centerLeft,
+                          child: Text('Bienvenido',
+                              style: titleOsw30Bold30Secondary.copyWith(
+                                fontSize: 30 * fontSizedGrow,
+                              )
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsetsGeometry.only(left:8),
-                          child: Text('$mesNombre $anioFormateado', style: textJt16bold400Secondary.copyWith(
-                          fontSize: 16 * fontSizedGrow,
-                        ),),
-                        ),
-                        const SizedBox(height: 5,),
+                        Schedules(checkin: attendance.user!.horaEntrada, checkout: attendance.user!.horaSalida, pause: '${attendance.user!.horaInicioComida}/ ${attendance.user!.horaFinComida}',),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: attendance.days.map((day) {
-                            return DayOfWeekButton(
-                              letterDay: day.day,
-                              day: day.date.split('-').last,
-                              indicatorColor: 
-                                (day.type ?? "").toLowerCase() =="asistencia" ? AppTheme.green
-                                : (day.type ?? "").toLowerCase() =="ausencia" ? AppTheme.red
-                                : (day.type ?? "").toLowerCase() =="vacaciones" ? Colors.amberAccent
-                                : Colors.transparent
-                                
-                            );
-                          }).toList(),
-                        )
+                          children: [
+                            Expanded(
+                              child: CheckButton(
+                                iconStart: Icons.watch_later_outlined,text: 'Check In',
+                                onTap: ()async{
+                                  dialogConfirm(
+                                    context: context, 
+                                    title: 'Check In',
+                                    message: '¿Deseas hacer check in?',
+                                    onConfirmed: ()async{
+                                      final provider = context.read<AttendanceProvider>();
+                                      final ok = await provider.checkIn();
+          
+                                      if (!context.mounted) return;
+                                      showDialog(
+                                        context: context, 
+                                        builder: (BuildContext context)=>AlertDialog(
+                                          title: Text(ok ? 'Éxito' : 'Error'),
+                                          content: Text(
+                                            ok ? provider.successMessage! : provider.errorMessage!,
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () => Navigator.pop(context), 
+                                              child: const Text('ok'),
+                                            ),
+                                            
+                                          ],
+                                        ),
+                                      );
+                                    }
+                                  );
+                                },),
+                              
+                            ),
+                            const SizedBox(width: 10,),
+          
+                            Expanded(
+                              child: CheckButton(
+                                iconStart: Icons.logout,text: 'Check Out',
+                                onTap: ()async{
+                                  dialogConfirm(
+                                    context: context, 
+                                    title: 'Check Out',
+                                    message: '¿Deseas hacer check out?',
+                                    onConfirmed: ()async{
+                                      final provider = context.read<AttendanceProvider>();
+                                      final ok = await provider.checkOut();
+                                      if (!context.mounted) return;
+                                      showDialog(
+                                        context: context, 
+                                        builder: (BuildContext context)=>AlertDialog(
+                                          title: Text(ok ? 'Éxito' : 'Error'),
+                                          content: Text(
+                                            ok ? provider.successMessage! : provider.errorMessage!,
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () => Navigator.pop(context), 
+                                              child: const Text('ok'),
+                                            ),
+                                            
+                                          ],
+                                        ),
+                                      );
+                                    }
+                                  );
+                                }),
+                            ), 
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start, 
+                          children: [
+                            Flexible(
+                              flex: 1,
+                              child: PauseSection(),
+                            ),
+                            const SizedBox(width: 10,),
+                            Flexible(
+                              flex: 1,
+                              child: CheckButton(
+                                iconStart: Icons.play_circle_outline,
+                                text: 'Reanudar',
+                                onTap: ()async{
+                                  dialogConfirm(
+                                    context: context, 
+                                    title: 'Reanudar',
+                                    message: '¿Deseas reanudar tu jornada?',
+                                    onConfirmed: ()async{
+                                      final provider = context.read<AttendanceProvider>();
+                                      final ok = await provider.restart();
+          
+                                      if (!context.mounted) return;
+                                      showDialog(
+                                        context: context, 
+                                        builder: (BuildContext context)=>AlertDialog(
+                                          title: Text(ok ? 'Éxito' : 'Error'),
+                                          content: Text(
+                                            ok ? provider.successMessage! : provider.errorMessage!,
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () => Navigator.pop(context), 
+                                              child: const Text('ok'),
+                                            ),
+                                            
+                                          ],
+                                        ),
+                                      );
+                                    }
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsetsGeometry.only(left: 8),
+                                child: Text(
+                                  'Resumen de la semana',
+                                  style: titleOsw30Bold30Secondary.copyWith(
+                                fontSize: 30 * fontSizedGrow,
+                              ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsetsGeometry.only(left:8),
+                                child: Text('$mesNombre $anioFormateado', style: textJt16bold400Secondary.copyWith(
+                                fontSize: 16 * fontSizedGrow,
+                              ),),
+                              ),
+                              const SizedBox(height: 5,),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: attendance.days.map((day) {
+                                  return DayOfWeekButton(
+                                    letterDay: day.day,
+                                    day: day.date.split('-').last,
+                                    indicatorColor: 
+                                      (day.type ?? "").toLowerCase() =="asistencia" ? AppTheme.green
+                                      : (day.type ?? "").toLowerCase() =="ausencia" ? AppTheme.red
+                                      : (day.type ?? "").toLowerCase() =="vacaciones" ? Colors.amberAccent
+                                      : Colors.transparent
+                                      
+                                  );
+                                }).toList(),
+                              )
+          
+                            ],
+                          ),
+                        ),
+                        ...attendance.days.map((day) {
+                          return DayOfWeekCard(
+                            day: day.date.split('-').last,
+                            letterDay: day.day,
+                            status: (day.type ?? "No status"),
+                            checkIn: day.checkIn ?? '--',
+                            checkOut: day.checkOut ?? '--',
+                            pausa: day.totalPauseHuman,
+                            
+                          );
+                        }),
 
+                        
+          
+                    
                       ],
-                    ),
+                    )
                   ),
-                  ...attendance.days.map((day) {
-                    return DayOfWeekCard(
-                      day: day.date.split('-').last,
-                      letterDay: day.day,
-                      status: (day.type ?? "No status"),
-                      checkIn: day.checkIn ?? '--',
-                      checkOut: day.checkOut ?? '--',
-                      pausa: day.totalPauseHuman,
-                      
-                    );
-                  }),
-
-              
-                ],
-              )
-            ),
+                ),
+              ),
           ),
         ),
+        if (attendance.isLoading)
+                            Container(
+                              color: Colors.black45, 
+                              child: const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            ),
+      ],
     );
  
   }
