@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:time_gate/pages/widgets_page/widgets_page.dart';
-import 'package:time_gate/providers/attendance_provider.dart';
+import 'package:time_gate/providers/home_provider.dart';
 import 'package:time_gate/themes/app_theme.dart';
 import 'package:time_gate/themes/custom_styles.dart';
 import 'package:time_gate/utils/dialog_confirmation.dart';
@@ -23,12 +23,12 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<AttendanceProvider>().loadAttendance();
+      context.read<HomeProvider>().loadHome();
     });
   }
   @override
   Widget build(BuildContext context) {
-    final attendance = context.watch<AttendanceProvider>();
+    final attendance = context.watch<HomeProvider>();
 
     final double maxContainerWidth = getMaxContentWidth(context);
     final titleOsw30Bold30Secondary = Theme.of(context).textTheme.titleOsw30Bold30Secondary;
@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
     return Stack(
       children: [
         RefreshIndicator(
-          onRefresh: ()=>attendance.loadAttendance(),
+          onRefresh: ()=>attendance.loadHome(),
           child: SingleChildScrollView(
             padding: const EdgeInsets.only(bottom: 60),
             child: SafeArea(
@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage> {
                                     title: 'Check In',
                                     message: '¿Deseas hacer check in?',
                                     onConfirmed: ()async{
-                                      final provider = context.read<AttendanceProvider>();
+                                      final provider = context.read<HomeProvider>();
                                       final ok = await provider.checkIn();
           
                                       if (!context.mounted) return;
@@ -126,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                                     title: 'Check Out',
                                     message: '¿Deseas hacer check out?',
                                     onConfirmed: ()async{
-                                      final provider = context.read<AttendanceProvider>();
+                                      final provider = context.read<HomeProvider>();
                                       final ok = await provider.checkOut();
                                       if (!context.mounted) return;
                                       showDialog(
@@ -171,7 +171,7 @@ class _HomePageState extends State<HomePage> {
                                     title: 'Reanudar',
                                     message: '¿Deseas reanudar tu jornada?',
                                     onConfirmed: ()async{
-                                      final provider = context.read<AttendanceProvider>();
+                                      final provider = context.read<HomeProvider>();
                                       final ok = await provider.restart();
           
                                       if (!context.mounted) return;

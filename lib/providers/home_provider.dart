@@ -1,28 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:time_gate/core/models/attendance_day.model.dart';
-import 'package:time_gate/core/models/attendance_user.model.dart';
-import 'package:time_gate/core/services/attendance_service.dart';
-// import 'package:time_gate/core/storage/token_storage.dart';
+import 'package:time_gate/core/models/home_day.model.dart';
+import 'package:time_gate/core/models/home_user.model.dart';
+import 'package:time_gate/core/services/home_service.dart';
 import 'package:time_gate/utils/get_location.dart';
 
-class AttendanceProvider with ChangeNotifier {
-  final AttendanceService _service = AttendanceService();
+class HomeProvider with ChangeNotifier {
+  final HomeService _service = HomeService();
 
   bool isLoading = false;
   String? errorMessage;
   String? successMessage;
   final LocationService _locationService = LocationService();
 
-  AttendanceUser? user;
-  List<AttendanceDay> days = [];
+  HomeUser? user;
+  List<HomeDay> days = [];
 
-  Future<void> loadAttendance() async {
+  Future<void> loadHome() async {
     try {
       isLoading = true;
       errorMessage = null;
       notifyListeners();
 
-      final result = await _service.getAttendance();
+      final result = await _service.getHome();
 
       user = result.user;
       days = result.days;
@@ -50,7 +49,7 @@ class AttendanceProvider with ChangeNotifier {
       }
 
     successMessage = response['message'];
-    await loadAttendance();
+    await loadHome();
 
     return true;
   } catch (e) {
@@ -81,7 +80,7 @@ class AttendanceProvider with ChangeNotifier {
 
       successMessage = response['message'];
 
-      await loadAttendance();
+      await loadHome();
       return true;
     } catch (e) {
       errorMessage = e is Exception
@@ -137,7 +136,7 @@ class AttendanceProvider with ChangeNotifier {
       }
 
       successMessage = response['message'];
-      await loadAttendance();
+      await loadHome();
       return true;
     } catch (e) {
       errorMessage = e is Exception

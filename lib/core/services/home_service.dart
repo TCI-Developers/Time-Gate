@@ -1,15 +1,15 @@
 import 'package:dio/dio.dart';
-import 'package:time_gate/core/models/attendance_day.model.dart';
-import 'package:time_gate/core/models/attendance_user.model.dart';
+import 'package:time_gate/core/models/home_day.model.dart';
+import 'package:time_gate/core/models/home_user.model.dart';
 import 'package:time_gate/core/network/api_client.dart';
 
-class AttendanceService {
+class HomeService {
   final ApiClient apiClient = ApiClient();
 
   Future<({
-    AttendanceUser user,
-    List<AttendanceDay> days,
-  })> getAttendance() async {
+    HomeUser user,
+    List<HomeDay> days,
+  })> getHome() async {
     try {
       final response = await apiClient.get('/weekly-summary');
 
@@ -17,12 +17,12 @@ class AttendanceService {
         throw Exception('Respuesta inválida');
       }
 
-      final AttendanceUser user =
-          AttendanceUser.fromJson(response.data['user']);
+      final HomeUser user =
+          HomeUser.fromJson(response.data['user']);
 
-      final List<AttendanceDay> days =
+      final List<HomeDay> days =
           (response.data['data'] as List)
-              .map((e) => AttendanceDay.fromJson(e))
+              .map((e) => HomeDay.fromJson(e))
               .toList();
 
       return (

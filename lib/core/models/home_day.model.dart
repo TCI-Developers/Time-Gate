@@ -1,4 +1,4 @@
-class AttendanceDay {
+class HomeDay {
   final String day;
   final String date;
   final int? checkId;
@@ -9,7 +9,7 @@ class AttendanceDay {
   final bool hasCheck;
   final String? type;
 
-  AttendanceDay({
+  HomeDay({
     required this.day,
     required this.date,
     required this.checkId,
@@ -21,8 +21,8 @@ class AttendanceDay {
     this.type,
   });
 
-  factory AttendanceDay.fromJson(Map<String, dynamic> json) {
-    return AttendanceDay(
+  factory HomeDay.fromJson(Map<String, dynamic> json) {
+    return HomeDay(
       day: json['day'],
       date: json['date'],
       checkId: json['check_id'],

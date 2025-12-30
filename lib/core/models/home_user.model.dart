@@ -1,4 +1,4 @@
-class AttendanceUser {
+class HomeUser {
   final String name;
   final String puesto;
   final String? profilePhotoPath;
@@ -7,7 +7,7 @@ class AttendanceUser {
   final String horaInicioComida;
   final String horaFinComida;
   
-  AttendanceUser({
+  HomeUser({
     required this.name,
     required this.puesto,
     this.profilePhotoPath,
@@ -17,8 +17,8 @@ class AttendanceUser {
     required this.horaFinComida,
   });
 
-  factory AttendanceUser.fromJson(Map<String, dynamic> json) {
-    return AttendanceUser(
+  factory HomeUser.fromJson(Map<String, dynamic> json) {
+    return HomeUser(
       name: json['name'],
       puesto: json['puesto'],
       profilePhotoPath: json['profile_photo_path'],

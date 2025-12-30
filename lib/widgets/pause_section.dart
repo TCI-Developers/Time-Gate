@@ -1,7 +1,7 @@
 // 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:time_gate/providers/attendance_provider.dart';
+import 'package:time_gate/providers/home_provider.dart';
 import 'package:time_gate/utils/responsive_utils.dart';
 import 'dart:math' show pi; 
 import 'check_button.dart'; 
@@ -106,7 +106,7 @@ class _PauseSectionState extends State<PauseSection> {
                   child: PauseMenuForm(
                     onOptionSelected: (option) async {
                 
-                      final provider = context.read<AttendanceProvider>();
+                      final provider = context.read<HomeProvider>();
                       final ok = await provider.pause(activity: option);
                       if (!mounted) return;
                       showDialog(
@@ -123,7 +123,7 @@ class _PauseSectionState extends State<PauseSection> {
                               onPressed: () {
                                 Navigator.pop(dialogContext);
                                 if (ok) {
-                                  provider.loadAttendance();
+                                  provider.loadHome();
                                 } else {
                                   
                                 }
@@ -138,7 +138,7 @@ class _PauseSectionState extends State<PauseSection> {
                       _closeMenu();
                     },
                     onSave: (save)async{
-                      final provider = context.read<AttendanceProvider>();
+                      final provider = context.read<HomeProvider>();
                       final ok = await provider.pause(activity: save);
                       if (!mounted) return;
                       showDialog(
@@ -155,7 +155,7 @@ class _PauseSectionState extends State<PauseSection> {
                               onPressed: () {
                                 Navigator.pop(dialogContext);
                                 if (ok) {
-                                  provider.loadAttendance();
+                                  provider.loadHome();
                                 } else {
                                   
                                 }
