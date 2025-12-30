@@ -18,7 +18,7 @@ class AuthProvider with ChangeNotifier {
       if (!data.containsKey("token")) {
         throw Exception("Token no encontrado");
       }
-      print('no esntre');
+      
       token = data["token"];
       // Guardar token
       await TokenStorage.saveToken(token!);
@@ -56,6 +56,7 @@ class AuthProvider with ChangeNotifier {
   Future<void> logout() async {
     token = null;
     await TokenStorage.deleteToken();
+    _authService.apiClient.clearToken();
     notifyListeners();
   }
 }

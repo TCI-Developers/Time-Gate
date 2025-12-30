@@ -11,7 +11,13 @@ class AuthService {
         "email": email,
         "password": password,
       });
-      return response.data;
+      
+      final data = response.data;
+      if (data.containsKey('token')) {
+        data['token'] = data['token'].toString(); 
+      }
+      return data;
+
     } on DioException catch (e) {
       final msg = e.response?.data["message"] ?? "Error de conexión";
       throw Exception(msg);

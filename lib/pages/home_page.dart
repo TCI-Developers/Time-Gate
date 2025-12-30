@@ -39,19 +39,11 @@ class _HomePageState extends State<HomePage> {
     String mesNombre = DateFormat('MMMM', 'es_Es').format(fechaActual).toUpperCase();
     String anioFormateado = DateFormat('yyyy').format(fechaActual);
 
-    // if (attendance.isLoading) {
-    //   return const Center(child: CircularProgressIndicator());
-    // }
-
     if (attendance.isLoading && attendance.user == null) {
-    return const Scaffold(
-      body: Center(child: CircularProgressIndicator()),
-    );
-  }
-
-    // if (attendance.user == null) {
-    //   return const SizedBox(); 
-    // }
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     if (attendance.user == null) {
     return const Scaffold(
       body: Center(child: Text("No se pudo cargar la información")),
@@ -259,10 +251,6 @@ class _HomePageState extends State<HomePage> {
                             
                           );
                         }),
-
-                        
-          
-                    
                       ],
                     )
                   ),
@@ -271,12 +259,12 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         if (attendance.isLoading)
-                            Container(
-                              color: Colors.black45, 
-                              child: const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                            ),
+          Container(
+            color: Colors.black45, 
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
       ],
     );
  
