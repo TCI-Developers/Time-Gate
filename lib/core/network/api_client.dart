@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+typedef VoidCallback = void Function();
 
 class ApiClient {
   static final ApiClient _instance = ApiClient._internal();
@@ -7,10 +8,12 @@ class ApiClient {
 
   late final Dio _dio;
 
+
+
   ApiClient._internal() {
     _dio = Dio(
       BaseOptions(
-        baseUrl: 'https://8f8ea113f46f.ngrok-free.app/api',
+        baseUrl: 'https://2320dbfc983e.ngrok-free.app/api',
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
         headers: {
@@ -18,6 +21,8 @@ class ApiClient {
         },
       ),
     );
+
+    
   }
 
   void setToken(String token) {

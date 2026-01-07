@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import '../network/api_client.dart';
 
 class AuthService {
-  // final ApiClient apiClient = ApiClient(baseUrl: 'https://38c3d72d2c20.ngrok-free.app/api');
+  
   final ApiClient apiClient = ApiClient();
 
   Future<Map<String, dynamic>> login(String email, String password) async {
@@ -12,11 +12,12 @@ class AuthService {
         "password": password,
       });
       
-      final data = response.data;
-      if (data.containsKey('token')) {
-        data['token'] = data['token'].toString(); 
-      }
-      return data;
+      
+      if (response.data is! Map) {
+      throw Exception("La respuesta del servidor no es un objeto válido");
+    }
+
+    return Map<String, dynamic>.from(response.data);
 
     } on DioException catch (e) {
       final msg = e.response?.data["message"] ?? "Error de conexión";

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// import 'package:time_gate/utils/navigation_service.dart';
 import '../core/services/auth_service.dart';
 import '../core/storage/token_storage.dart';
 
@@ -13,7 +14,7 @@ class AuthProvider with ChangeNotifier {
     try {
       isLoading = true;
       notifyListeners();
-
+      
       final data = await _authService.login(email, password);
       if (!data.containsKey("token")) {
         throw Exception("Token no encontrado");
@@ -58,5 +59,10 @@ class AuthProvider with ChangeNotifier {
     await TokenStorage.deleteToken();
     _authService.apiClient.clearToken();
     notifyListeners();
+
+    // navigatorKey.currentState?.pushNamedAndRemoveUntil(
+    //   '/login',
+    //   (route) => false,
+    // );
   }
 }

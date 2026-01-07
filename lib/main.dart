@@ -6,10 +6,9 @@ import 'package:time_gate/providers/home_provider.dart';
 import 'package:time_gate/providers/profile_provider.dart';
 import 'package:time_gate/providers/tabbar_provider.dart'; 
 import 'package:time_gate/themes/app_theme.dart';
-import 'package:intl/date_symbol_data_local.dart';  
+import 'package:intl/date_symbol_data_local.dart';
+// import 'package:time_gate/utils/navigation_service.dart';  
 import './providers/auth_provider.dart';
-
-
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -59,6 +58,7 @@ class MyApp extends StatelessWidget {
         title: 'Material App',
         debugShowCheckedModeBanner: false,
         initialRoute: initialRoute,
+        // navigatorKey: navigatorKey,
         routes: {
           'main': (_) => const TabsPage(),
           'login': (_) => const LoginPage(),
