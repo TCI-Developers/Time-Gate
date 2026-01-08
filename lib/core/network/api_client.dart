@@ -1,4 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:time_gate/providers/auth_provider.dart';
+import 'package:time_gate/utils/navigation_service.dart';
 typedef VoidCallback = void Function();
 
 class ApiClient {
@@ -13,7 +16,7 @@ class ApiClient {
   ApiClient._internal() {
     _dio = Dio(
       BaseOptions(
-        baseUrl: 'https://2320dbfc983e.ngrok-free.app/api',
+        baseUrl: 'https://026fdf4a8453.ngrok-free.app/api',
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
         headers: {
@@ -21,6 +24,43 @@ class ApiClient {
         },
       ),
     );
+
+    _dio.interceptors.add(
+    InterceptorsWrapper(
+      onError: (error, handler) async {
+        final status = error.response?.statusCode;
+        
+        if (status == 401 || status == 302) {
+          // 1. Mostrar modal
+        showDialog(
+          context: navigatorKey.currentContext!,
+          barrierDismissible: false,
+          builder: (_) => AlertDialog(
+            title: const Text('Sesión caducada'),
+            content: const Text('Tu sesión ha expirado. Inicia sesión nuevamente.'),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  Navigator.of(navigatorKey.currentContext!).pop(); // cerrar modal
+
+                  // 2. Llamar logout (él ya navega solo)
+                  final auth = AuthProvider();
+                  await auth.logout();
+                },
+                child: const Text('Aceptar'),
+              ),
+            ],
+          ),
+        );
+          
+
+          return; 
+        }
+        return handler.next(error);
+      },
+    ),
+  );
+
 
     
   }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:time_gate/utils/navigation_service.dart';
+import 'package:time_gate/utils/navigation_service.dart';
 import '../core/services/auth_service.dart';
 import '../core/storage/token_storage.dart';
 
@@ -60,9 +60,9 @@ class AuthProvider with ChangeNotifier {
     _authService.apiClient.clearToken();
     notifyListeners();
 
-    // navigatorKey.currentState?.pushNamedAndRemoveUntil(
-    //   '/login',
-    //   (route) => false,
-    // );
+    navigatorKey.currentState?.pushNamedAndRemoveUntil(
+      'login',
+      (route) => false,
+    );
   }
 }
