@@ -21,46 +21,50 @@ class ApiClient {
         receiveTimeout: const Duration(seconds: 10),
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
       ),
     );
 
     _dio.interceptors.add(
-    InterceptorsWrapper(
-      onError: (error, handler) async {
-        final status = error.response?.statusCode;
-        
-        if (status == 401 || status == 302) {
-          // 1. Mostrar modal
-        showDialog(
-          context: navigatorKey.currentContext!,
-          barrierDismissible: false,
-          builder: (_) => AlertDialog(
-            title: const Text('Sesión caducada'),
-            content: const Text('Tu sesión ha expirado. Inicia sesión nuevamente.'),
-            actions: [
-              TextButton(
-                onPressed: () async {
-                  Navigator.of(navigatorKey.currentContext!).pop(); // cerrar modal
+      InterceptorsWrapper(
+            onError: (error, handler) async {
+              final status = error.response?.statusCode;
+              if (status == 401) {
+                final ctx = navigatorKey.currentContext;
 
-                  // 2. Llamar logout (él ya navega solo)
+                if (ctx != null) {
+                  await showDialog(
+                    context: ctx,
+                    barrierDismissible: false,
+                    builder: (_) => AlertDialog(
+                      title: const Text('Sesión caducada'),
+                      content: const Text('Tu sesión ha expirado. Inicia sesión nuevamente.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () async {
+                            Navigator.of(ctx).pop();
+                            final auth = AuthProvider();
+                            await auth.logout();
+                          },
+                          child: const Text('Aceptar'),
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  // No hay contexto disponible → solo logout
                   final auth = AuthProvider();
                   await auth.logout();
-                },
-                child: const Text('Aceptar'),
-              ),
-            ],
-          ),
-        );
-          
+                }
+                return;
+              }
 
-          return; 
-        }
         return handler.next(error);
       },
+
     ),
   );
-
 
     
   }

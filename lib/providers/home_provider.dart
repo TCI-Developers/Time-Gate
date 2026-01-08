@@ -27,6 +27,7 @@ class HomeProvider with ChangeNotifier {
       days = result.days;
     } catch (e) {
       errorMessage = e.toString();
+      
     } finally {
       isLoading = false;
       notifyListeners();
