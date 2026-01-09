@@ -68,7 +68,7 @@ class AttendanceCard extends StatelessWidget {
                       style: textOsw11bold400Secondary.copyWith(fontSize: 11*fontSizedGrow)
                     ),
                     Text(
-                      '${currentProgress.toInt()}', 
+                      '${ maxProgress.toInt() - currentProgress.toInt()}', 
                       style: textOsw12bold400Secondary.copyWith(fontSize: 12*fontSizedGrow)
                     )
                   ],
@@ -84,7 +84,7 @@ class AttendanceCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(type, style: textOsw14bold400Na.copyWith(color: color, fontSize: 14*fontSizedGrow)),
-              Text('2 de 3 Disponibles', style: textOsw11bold400Secondary.copyWith(fontSize: 11*fontSizedGrow),)
+              Text('${currentProgress.toInt()} de ${maxProgress.toInt()} Disponibles', style: textOsw11bold400Secondary.copyWith(fontSize: 11*fontSizedGrow),)
             ],
           )
         ],

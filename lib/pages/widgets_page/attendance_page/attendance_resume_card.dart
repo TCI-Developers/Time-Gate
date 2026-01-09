@@ -5,11 +5,14 @@ import 'package:time_gate/utils/responsive_utils.dart';
 
 class AttendanceResumeCard extends StatelessWidget {
   
-  final String checkIn;
-  final String checkOut;
-  final String pausa;
+  final String hoursWorked;
+  final String leaveHours;
+  final String overtime;
+  final String daysWorked;
+  final String leaveDays;
+  final String extraDays;
 
-  const AttendanceResumeCard({super.key, required this.checkIn, required this.checkOut, required this.pausa});
+  const AttendanceResumeCard({super.key, required this.hoursWorked, required this.leaveHours, required this.overtime, required this.daysWorked, required this.leaveDays, required this.extraDays});
   
   @override
   Widget build(BuildContext context) {
@@ -25,9 +28,9 @@ class AttendanceResumeCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              _CheckTime(title: 'Horas Trabajadas', text: checkIn, border: false),
-              _CheckTime(title: 'Horas de Permiso', text: checkOut, border: true),
-              _CheckTime(title: 'Horas Extra', text: pausa, border: false),
+              _CheckTime(title: 'Horas Trabajadas', text: hoursWorked, border: false),
+              _CheckTime(title: 'Horas de Permiso', text: leaveHours, border: true),
+              _CheckTime(title: 'Horas Extra', text: overtime, border: false),
             ],
           ),
           const SizedBox(height: 20,),
@@ -40,9 +43,9 @@ class AttendanceResumeCard extends StatelessWidget {
           const SizedBox(height: 20,),
           Row(
             children: [
-              _CheckTime(title: 'Días Trabajados', text: checkIn, border: false),
-              _CheckTime(title: 'Días de Permiso', text: checkOut, border: true),
-              _CheckTime(title: 'Días Extra', text: pausa, border: false),
+              _CheckTime(title: 'Días Trabajados', text: daysWorked, border: false),
+              _CheckTime(title: 'Días de Permiso', text: leaveDays, border: true),
+              _CheckTime(title: 'Días Extra', text: extraDays, border: false),
             ],
           ),
         ],

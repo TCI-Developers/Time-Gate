@@ -12,7 +12,7 @@ class HomeService {
   })> getHome() async {
     try {
       final response = await apiClient.get('/weekly-summary');
-      print(response);
+      
       if (response.data['status'] != 'ok') {
         throw Exception('Respuesta inválida');
       }

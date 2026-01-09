@@ -17,6 +17,8 @@ class ReusableCalendar extends StatefulWidget {
   final DateTime? rangeStart;
   final DateTime? rangeEnd;
   final DateTime? initialFocusedDay;
+
+  final Function(DateTime focusedDay)? onPageChanged;
   
   const ReusableCalendar({
     super.key,
@@ -25,7 +27,8 @@ class ReusableCalendar extends StatefulWidget {
     this.asistencias,
     this.rangeStart,
     this.rangeEnd,
-    this.initialFocusedDay,
+    this.initialFocusedDay, 
+    this.onPageChanged,
   });
   
   @override
@@ -50,6 +53,18 @@ class _ReusableCalendarState extends State<ReusableCalendar> {
     _focusedDay = DateTime(initial.year, initial.month, 1);
   }
 
+  @override
+  void didUpdateWidget(covariant ReusableCalendar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Si el padre (AttendancePage) cambia la fecha, el calendario se mueve a esa fecha
+    if (widget.initialFocusedDay != null && 
+        widget.initialFocusedDay != oldWidget.initialFocusedDay) {
+      setState(() {
+        _focusedDay = widget.initialFocusedDay!;
+      });
+    }
+  }
+
   // Lógica de Generación de Meses
   List<DateTime> _generarMeses() {
     List<DateTime> meses = [];
@@ -63,25 +78,33 @@ class _ReusableCalendarState extends State<ReusableCalendar> {
     return meses;
   }
   
-  // HANDLER para el Dropdown del mes
-  void _onMonthChanged(DateTime? newMonth) {
-    if (newMonth != null) {
-      setState(() {
-        // Mantiene el día en 1
-        _focusedDay = newMonth; 
-      });
+  // 1. HANDLER para el Dropdown
+void _onMonthChanged(DateTime? newMonth) {
+  if (newMonth != null) {
+    setState(() {
+      _focusedDay = newMonth; 
+    });
+    
+    // 🆕 Notificamos al padre (AttendancePage)
+    if (widget.onPageChanged != null) {
+      widget.onPageChanged!(_focusedDay);
     }
   }
+}
 
-  // HANDLER para la navegación con swipe o flechas del TableCalendar
-  void _onPageChanged(DateTime newFocusedDay) {
-    if (_focusedDay.year != newFocusedDay.year || _focusedDay.month != newFocusedDay.month) {
-        setState(() {
-            // Establece el nuevo mes enfocado, manteniendo el día en 1
-            _focusedDay = DateTime(newFocusedDay.year, newFocusedDay.month, 1);
-        });
+// 2. HANDLER para el Swipe (deslizar)
+void _onPageChanged(DateTime newFocusedDay) {
+  if (_focusedDay.year != newFocusedDay.year || _focusedDay.month != newFocusedDay.month) {
+    setState(() {
+      _focusedDay = DateTime(newFocusedDay.year, newFocusedDay.month, 1);
+    });
+    
+    // 🆕 Notificamos al padre (AttendancePage)
+    if (widget.onPageChanged != null) {
+      widget.onPageChanged!(_focusedDay);
     }
   }
+}
 
   @override
   Widget build(BuildContext context) {

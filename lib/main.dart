@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:time_gate/pages/pages.dart';
+import 'package:time_gate/providers/attendance_provider.dart';
 import 'package:time_gate/providers/home_provider.dart';
 import 'package:time_gate/providers/profile_provider.dart';
 import 'package:time_gate/providers/tabbar_provider.dart'; 
 import 'package:time_gate/themes/app_theme.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:time_gate/utils/navigation_service.dart';
-// import 'package:time_gate/utils/navigation_service.dart';  
 import './providers/auth_provider.dart';
 
 void main() async {
@@ -53,6 +53,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
         ChangeNotifierProvider(create: (_) => ProfileProvider()),
         ChangeNotifierProvider(create: (_) => HomeProvider()),
+        ChangeNotifierProvider(create: (_) => AttendanceProvider()),
 
       ],
       child: MaterialApp(

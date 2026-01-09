@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:time_gate/pages/widgets_page/widgets_page.dart';
 import 'package:time_gate/providers/home_provider.dart';
+import 'package:time_gate/providers/tabbar_provider.dart';
 import 'package:time_gate/themes/app_theme.dart';
 import 'package:time_gate/themes/custom_styles.dart';
 import 'package:time_gate/utils/dialog_confirmation.dart';
@@ -23,12 +24,25 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<HomeProvider>().loadHome();
+      final tabbarProv = context.read<TabbarProvider>();
+      final homeProv = context.read<HomeProvider>();
+
+      // Solo cargamos si el índice es 0 y no hay datos cargados aún
+      if (tabbarProv.selectedMEnuOption == 0 && homeProv.user == null) {
+        homeProv.loadHome();
+      }
     });
   }
   @override
   Widget build(BuildContext context) {
+    final tabbarProv = context.watch<TabbarProvider>();
     final attendance = context.watch<HomeProvider>();
+
+    if (tabbarProv.selectedMEnuOption == 0 && 
+      attendance.user == null && 
+      !attendance.isLoading) {
+      Future.microtask(() => attendance.loadHome());
+    }
 
     final double maxContainerWidth = getMaxContentWidth(context);
     final titleOsw30Bold30Secondary = Theme.of(context).textTheme.titleOsw30Bold30Secondary;
@@ -53,7 +67,7 @@ class _HomePageState extends State<HomePage> {
     return Stack(
       children: [
         RefreshIndicator(
-          onRefresh: ()=>attendance.loadHome(),
+          onRefresh: () async => await attendance.loadHome(),
           child: SingleChildScrollView(
             padding: const EdgeInsets.only(bottom: 60),
             child: SafeArea(

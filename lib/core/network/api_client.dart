@@ -16,7 +16,7 @@ class ApiClient {
   ApiClient._internal() {
     _dio = Dio(
       BaseOptions(
-        baseUrl: 'https://026fdf4a8453.ngrok-free.app/api',
+        baseUrl: 'https://ec1cff88c3fc.ngrok-free.app/api',
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
         headers: {
@@ -32,7 +32,6 @@ class ApiClient {
               final status = error.response?.statusCode;
               if (status == 401) {
                 final ctx = navigatorKey.currentContext;
-
                 if (ctx != null) {
                   await showDialog(
                     context: ctx,
@@ -53,7 +52,6 @@ class ApiClient {
                     ),
                   );
                 } else {
-                  // No hay contexto disponible → solo logout
                   final auth = AuthProvider();
                   await auth.logout();
                 }
