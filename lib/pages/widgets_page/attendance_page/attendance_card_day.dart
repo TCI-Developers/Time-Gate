@@ -10,9 +10,11 @@ class AttendanceCardDay extends StatelessWidget {
   final String checkout;
   final String pause;
   final String hoursworked;
+  final String date;
+  final String type;
   
   const AttendanceCardDay({
-    super.key, required this.checkin, required this.checkout, required this.pause, required this.hoursworked,
+    super.key, required this.checkin, required this.checkout, required this.pause, required this.hoursworked, required this.date, required this.type,
   });
 
   @override
@@ -45,8 +47,8 @@ class AttendanceCardDay extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       
                       children: [
-                        Text('Viernes | 18/JUL/2025', style: titleOsw18Bold400Secondary.copyWith(fontSize: 18*fontSizedGrow),),
-                        AttendanceTag(text: 'Asistencia', color: Colors.green)
+                        Text(date, style: titleOsw18Bold400Secondary.copyWith(fontSize: 18*fontSizedGrow),),
+                        AttendanceTag(text: type, color: Colors.green)
                       ],
                     ),
                     const SizedBox(height: 10,),

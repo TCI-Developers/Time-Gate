@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:time_gate/providers/auth_provider.dart';
 import 'package:time_gate/utils/navigation_service.dart';
 typedef VoidCallback = void Function();
@@ -16,7 +17,7 @@ class ApiClient {
   ApiClient._internal() {
     _dio = Dio(
       BaseOptions(
-        baseUrl: 'https://ec1cff88c3fc.ngrok-free.app/api',
+        baseUrl: 'https://f273cb47b5e6.ngrok-free.app/api',
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
         headers: {
@@ -26,45 +27,45 @@ class ApiClient {
       ),
     );
 
-    _dio.interceptors.add(
+  _dio.interceptors.add(
       InterceptorsWrapper(
-            onError: (error, handler) async {
-              final status = error.response?.statusCode;
-              if (status == 401) {
-                final ctx = navigatorKey.currentContext;
-                if (ctx != null) {
-                  await showDialog(
-                    context: ctx,
-                    barrierDismissible: false,
-                    builder: (_) => AlertDialog(
-                      title: const Text('Sesión caducada'),
-                      content: const Text('Tu sesión ha expirado. Inicia sesión nuevamente.'),
-                      actions: [
-                        TextButton(
-                          onPressed: () async {
-                            Navigator.of(ctx).pop();
-                            final auth = AuthProvider();
-                            await auth.logout();
-                          },
-                          child: const Text('Aceptar'),
-                        ),
-                      ],
+        onError: (error, handler) async {
+          final status = error.response?.statusCode;
+          if (status == 401) {
+            final ctx = navigatorKey.currentContext;
+            
+            if (ctx != null) {
+              // No limpiamos aquí, dejamos que el logout lo haga todo
+              await showDialog(
+                context: ctx,
+                barrierDismissible: false,
+                builder: (_) => AlertDialog(
+                  title: const Text('Sesión caducada'),
+                  content: const Text('Tu sesión ha expirado. Inicia sesión nuevamente.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () async {
+                        Navigator.of(ctx).pop();
+                        
+                        // IMPORTANTE: Pasamos el 'ctx' para que limpie los providers
+                        await ctx.read<AuthProvider>().logout(ctx); 
+                      },
+                      child: const Text('Aceptar'),
                     ),
-                  );
-                } else {
-                  final auth = AuthProvider();
-                  await auth.logout();
-                }
-                return;
-              }
-
-        return handler.next(error);
-      },
-
-    ),
-  );
-
-    
+                  ],
+                ),
+              );
+            } else {
+              // Si no hay contexto, lanzamos el logout sin contexto
+              // Pero necesitamos la instancia real. Si no la hay, no podemos hacer mucho más que navegar.
+              // navigatorKey.currentState?.pushNamedAndRemoveUntil('login', (route) => false);
+            }
+            return;
+          }
+          return handler.next(error);
+        },
+      ),
+    );
   }
 
   void setToken(String token) {

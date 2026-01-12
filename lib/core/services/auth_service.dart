@@ -11,18 +11,28 @@ class AuthService {
         "email": email,
         "password": password,
       });
-      
-      
       if (response.data is! Map) {
       throw Exception("La respuesta del servidor no es un objeto válido");
     }
 
+    
     return Map<String, dynamic>.from(response.data);
 
     } on DioException catch (e) {
-      final msg = e.response?.data["message"] ?? "Error de conexión";
-      throw Exception(msg);
-    }
+
+      if (e.response != null && e.response!.data != null) {
+        final data = e.response!.data;
+
+        if (data is Map && data.containsKey("message")) {
+          throw Exception(data["message"]);
+        } 
+
+        if (data is String) {
+          throw Exception(data);
+        }
+      }
+        throw Exception("Error de conexión o credenciales inválidas");
+      }
   }
 
   Future<bool> checkSession() async{

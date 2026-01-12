@@ -18,6 +18,10 @@ class AttendanceStats {
   final double? retardosPermitidos;
   final double? permisosPermitidos;
   final double? totalVacaciones;
+  final String? tiempoTomado;
+  final double? diasExtra;
+  final double? ausenciasPermitidas;
+  
 
   AttendanceStats({
     this.retardosTomados,
@@ -39,29 +43,35 @@ class AttendanceStats {
     this.retardosPermitidos,
     this.permisosPermitidos,
     this.totalVacaciones,
+    this.tiempoTomado,
+    this.diasExtra,
+    this.ausenciasPermitidas,
   });
 
   factory AttendanceStats.fromJson(Map<String, dynamic> json) {
     return AttendanceStats(
-      retardosTomados: json['retardos_tomados'],
+      retardosTomados: json['retardos_tomados']?.toDouble(),
       tiempoRetardo: json['tiempo_retardo'],
       totalTrabajado: json['total_trabajado'],
       tiempoReloj: json['tiempo_reloj'],
-      diasTrabajados: json['dias_trabajados'],
-      permisosTomados: json['permisos_tomados'],
-      vacacionesTomadas: json['vacaciones_tomadas'],
-      asistenciasMensuales: json['asistencias_mensuales'],
-      totalAsistencias: json['total_asistencias'],
+      diasTrabajados: json['dias_trabajados']?.toDouble(),
+      permisosTomados: json['permisos_tomados']?.toDouble(),
+      vacacionesTomadas: json['vacaciones_tomadas']?.toDouble(),
+      asistenciasMensuales: json['asistencias_mensuales']?.toDouble(),
+      totalAsistencias: json['total_asistencias']?.toDouble(),
       horasPermisos: json['horas_permisos'],
       horasExtra: json['horas_extra'],
       fechaRetardo: List<String>.from(json['fecha_retardo'] ?? []),
       fechaVacaciones: List<String>.from(json['fecha_vacaciones'] ?? []),
       fechaPermisos: List<String>.from(json['fecha_permisos'] ?? []),
       fechaAusencias: List<String>.from(json['fecha_ausencias'] ?? []),
-      totalAusencias: json['total_ausencias'],
-      retardosPermitidos: json['retardos_permitidos'],
-      permisosPermitidos: json['permisos_permitidos'],
-      totalVacaciones: json['total_vacaciones'],
+      totalAusencias: json['total_ausencias']?.toDouble(),
+      retardosPermitidos: json['retardos_permitidos']?.toDouble(),
+      permisosPermitidos: json['permisos_permitidos']?.toDouble(),
+      totalVacaciones: json['total_vacaciones']?.toDouble(),
+      diasExtra: json['dias_extra']?.toDouble(),
+      ausenciasPermitidas: json['ausencias_permitidas']?.toDouble()
+      
     );
   }
 }

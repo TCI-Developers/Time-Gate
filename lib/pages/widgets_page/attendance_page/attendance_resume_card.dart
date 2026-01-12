@@ -8,9 +8,9 @@ class AttendanceResumeCard extends StatelessWidget {
   final String hoursWorked;
   final String leaveHours;
   final String overtime;
-  final String daysWorked;
-  final String leaveDays;
-  final String extraDays;
+  final int? daysWorked;
+  final int? leaveDays;
+  final int? extraDays;
 
   const AttendanceResumeCard({super.key, required this.hoursWorked, required this.leaveHours, required this.overtime, required this.daysWorked, required this.leaveDays, required this.extraDays});
   
@@ -43,9 +43,9 @@ class AttendanceResumeCard extends StatelessWidget {
           const SizedBox(height: 20,),
           Row(
             children: [
-              _CheckTime(title: 'Días Trabajados', text: daysWorked, border: false),
-              _CheckTime(title: 'Días de Permiso', text: leaveDays, border: true),
-              _CheckTime(title: 'Días Extra', text: extraDays, border: false),
+              _CheckTime(title: 'Días Trabajados', text: daysWorked.toString(), border: false),
+              _CheckTime(title: 'Días de Permiso', text: leaveDays.toString(), border: true),
+              _CheckTime(title: 'Días Extra', text: extraDays.toString(), border: false),
             ],
           ),
         ],

@@ -4,8 +4,20 @@ import 'package:time_gate/utils/calendar_data.dart';
 import 'package:time_gate/utils/responsive_utils.dart';
 
 class MonthlyRegistrationCard extends StatelessWidget {
+  final double asistencia;
+  final double vacaciones;
+  final double ausencias;
+  final double ausenciasPermitidas;
+  final double totalVacaciones;
+  final double asistenciasMensuales;
+
   const MonthlyRegistrationCard({
-    super.key,
+    super.key, required this.asistencia, 
+    required this.vacaciones, 
+    required this.ausencias, 
+    required this.ausenciasPermitidas, 
+    required this.totalVacaciones, 
+    required this.asistenciasMensuales,
   });
 
   @override
@@ -41,30 +53,30 @@ class MonthlyRegistrationCard extends StatelessWidget {
                   width: 40*fontSizedGrow,
                   height: 40*fontSizedGrow,
                   child: CircularProgressIndicator(
-                    value: .75,                    
-                    strokeWidth: 3,                   
-                    backgroundColor: Colors.black, 
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+                    value: (1.0 - (ausencias / ausenciasPermitidas)),                    
+                    strokeWidth: 4,                   
+                    backgroundColor: const Color.fromARGB(255, 187, 51, 41), 
+                    valueColor: AlwaysStoppedAnimation<Color>(const Color.fromARGB(255, 255, 193, 193)),
                   ),
               ),
               SizedBox(
                   width: 70*fontSizedGrow,
                   height: 70*fontSizedGrow,
                   child: CircularProgressIndicator(
-                    value: .75,                    
-                    strokeWidth: 3,                   
-                    backgroundColor: Color.fromARGB(255, 255, 193, 193), 
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                    value: (1.0 - (asistencia/asistenciasMensuales)),                    
+                    strokeWidth: 4,                   
+                    backgroundColor: const Color.fromARGB(255, 255, 193, 193), 
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.yellow),
                   ),
                 ),
                SizedBox(
                   width: 105*fontSizedGrow,
                   height: 105*fontSizedGrow,
                   child: CircularProgressIndicator(
-                    value: .75,                    
-                    strokeWidth: 3,                   
-                    backgroundColor: Colors.black, 
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+                    value: (1.0 - (asistencia / asistenciasMensuales)),                    
+                    strokeWidth: 4,                   
+                    backgroundColor: const Color.fromARGB(255, 54, 125, 56), 
+                    valueColor: AlwaysStoppedAnimation<Color>(const Color.fromARGB(255, 255, 193, 193)),
                   ),
                 ),
             ],
@@ -74,9 +86,9 @@ class MonthlyRegistrationCard extends StatelessWidget {
             
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TotalStatus(cant: 28, type: 'Asistencia', color: Color(0xFF7e9758),),
-              TotalStatus(cant: 6, type: 'Vacaciones', color: kColorVacaciones,),
-              TotalStatus(cant: 4, type: 'Ausencia', color: kColorFalta,),
+              TotalStatus(cant: asistencia.toInt(), type: 'Asistencia', color: Color(0xFF7e9758),),
+              TotalStatus(cant: vacaciones.toInt(), type: 'Vacaciones', color: kColorVacaciones,),
+              TotalStatus(cant: ausencias.toInt(), type: 'Ausencia', color: kColorFalta,),
             ],
           )
         ],

@@ -44,7 +44,14 @@ class AttendanceAttendanceSubage extends StatelessWidget {
                   Expanded(
                     child: Column(
                       children: [
-                        MonthlyRegistrationCard()
+                        MonthlyRegistrationCard(
+                          asistencia: stats?.diasTrabajados ?? 0,
+                          vacaciones: stats?.vacacionesTomadas ?? 0,
+                          ausencias: stats?.totalAusencias ?? 0,
+                          asistenciasMensuales: stats?.asistenciasMensuales ?? 0,
+                          totalVacaciones: stats?.totalVacaciones ?? 1,
+                          ausenciasPermitidas: stats?.ausenciasPermitidas ?? 0,
+                        )
                       ],
                     ),
                   )
@@ -55,29 +62,31 @@ class AttendanceAttendanceSubage extends StatelessWidget {
           Row(
             children: [
               AttendanceCardTwo(
-                  color: Colors.red, type: 'Asistencias', 
+                  color: const Color.fromARGB(255, 59, 139, 62), type: 'Asistencias', 
                   maxProgress: stats?.asistenciasMensuales ?? 1, 
                   currentProgress: stats?.diasTrabajados ?? 0.0,
                   text: 'de trabajo ordinario',
+                  horas: stats?.totalTrabajado ?? '0',
               ),
               const SizedBox(width: 10,),
               AttendanceCardTwo(
-                color: Colors.red, 
+                color: const Color.fromARGB(255, 197, 52, 42), 
                 type: 'Ausencias', 
-                maxProgress: 10, 
+                maxProgress: stats?.ausenciasPermitidas?.toDouble() ?? 1, 
                 currentProgress: stats?.totalAusencias ?? 1, 
                 text: 'horas de retraso',
+                horas: stats?.tiempoRetardo ?? '0',
               ),    
             ],
           ),
           const SizedBox(height: 20,),
           AttendanceResumeCard(
-            hoursWorked: '', 
-            leaveHours: stats?.horasPermisos ??'', 
-            overtime: stats?.horasExtra ?? '', 
-            daysWorked: stats?.diasTrabajados.toString() ?? '', 
-            leaveDays: stats?.permisosTomados.toString() ?? '', 
-            extraDays: '',
+            hoursWorked: stats?.totalTrabajado.toString() ?? '0', 
+            leaveHours: stats?.horasPermisos.toString() ?? '0', 
+            overtime: stats?.horasExtra.toString() ?? '0', 
+            daysWorked: stats?.diasTrabajados?.toInt() ?? 0, 
+            leaveDays: stats?.permisosTomados?.toInt() ?? 0, 
+            extraDays: stats?.diasExtra?.toInt() ?? 0,
           ),
           const SizedBox(height: 20,),
           if (data.isEmpty)
@@ -100,7 +109,9 @@ class AttendanceAttendanceSubage extends StatelessWidget {
                 hoursworked: entry.totalTrabajado?.toString() ?? '0h 00m',
                 
                 // 4. Si tu widget AttendanceCardDay tiene campo para fecha o día:
-                // date: "${entry.day} ${entry.date}", 
+                date: "${entry.day} | ${entry.date}", 
+
+                type: (entry.type == null || entry.type == "") ? 'por definir' : entry.type ?? '',
               ),
             )),
       ],

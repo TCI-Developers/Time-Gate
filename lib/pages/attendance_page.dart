@@ -21,6 +21,7 @@ class _AttendancePageState extends State<AttendancePage> {
 
   int tabIndex = 0;
   DateTime _currentFocusedDate = DateTime.now();
+  
   @override
   void initState() {
     super.initState();
@@ -39,12 +40,15 @@ class _AttendancePageState extends State<AttendancePage> {
   }
 
   void _fetchAttendance() {
-    if (!mounted) return;
+    final attendanceProv = context.read<AttendanceProvider>();
+    if (!mounted || attendanceProv.isLoading) return;
     // 1. Determinamos el tipo según el tab seleccionado
     String type = 'asistencias';
     if (tabIndex == 1) type = 'vacaciones';
     if (tabIndex == 2) type = 'permisos';
     if (tabIndex == 3) type = 'ausencias';
+
+    attendanceProv.clear();
 
     // 2. Llamamos al provider pasando los 3 datos: tipo, mes y año
     context.read<AttendanceProvider>().loadAttendance(
@@ -53,11 +57,18 @@ class _AttendancePageState extends State<AttendancePage> {
       year: _currentFocusedDate.year,
     );
   }
-
+  
   List<DateTime> _parseDates(List<String> dates) {
-    return dates.map((d) => DateTime.parse(d)).toList();
+    if(dates.isEmpty) return[];
+    try {
+      return dates.map((d) => DateTime.parse(d)).toList();
+    } catch (e) {
+
+      return [];
+    }
   }
 
+  
   @override
   Widget build(BuildContext context) {
     final tabIndexPrincipal = context.watch<TabbarProvider>().selectedMEnuOption;

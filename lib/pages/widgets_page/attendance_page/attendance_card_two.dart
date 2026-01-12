@@ -9,9 +9,10 @@ class AttendanceCardTwo extends StatelessWidget {
   final double maxProgress;
   final double currentProgress; 
   final String text;
+  final String horas;
   
   const AttendanceCardTwo({
-    super.key, required this.color, required this.type, required this.maxProgress, required this.currentProgress, required this.text,
+    super.key, required this.color, required this.type, required this.maxProgress, required this.currentProgress, required this.text, required this.horas,
   });
   
   @override
@@ -30,6 +31,7 @@ class AttendanceCardTwo extends StatelessWidget {
 
      double circleSize = 73.0*fontSizedGrow;
      double borderWidth = 3.0*fontSizedGrow; 
+     
 
     return Expanded(
       child: Container(
@@ -94,7 +96,7 @@ class AttendanceCardTwo extends StatelessWidget {
                                 ],
                             ),
                           ),
-                          Text('De 31 días', style: textJt10boldNormalSecondary.copyWith(
+                          Text('De ${maxProgress.toInt()} días', style: textJt10boldNormalSecondary.copyWith(
                             fontSize: 10*fontSizedGrow
                           ),)
                           
@@ -115,7 +117,7 @@ class AttendanceCardTwo extends StatelessWidget {
                 children: [
                   Text('Horas', 
                     style: textJt16bold400Secondary.copyWith(color: color, fontWeight: FontWeight.w900, fontSize: 16*fontSizedGrow), softWrap: true, maxLines: null,),
-                  Text('${currentProgress * 24} hrs', 
+                  Text(horas, 
                     style: textJt13bold400Secondary, softWrap: true, maxLines: null,),
                   Text(text, 
                     style: textJt11bold400Secondary.copyWith(height: .9, fontSize: 13*fontSizedGrow), softWrap: true, maxLines: null,)

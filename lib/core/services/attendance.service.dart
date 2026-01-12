@@ -21,7 +21,7 @@ class AttendanceService {
         'month': month,
         'year': year,
       });
-      print("✅ RESPUESTA API RECIBIDA: ${response.data}");
+      
       if (response.data['status'] != 'ok') {
         throw Exception('Error al obtener los datos de asistencia');
       }
@@ -31,6 +31,8 @@ class AttendanceService {
       final List<AttendanceEntry> data = (response.data['data'] as List)
           .map((e) => AttendanceEntry.fromJson(e))
           .toList();
+
+      
 
       return (
         stats: stats,
