@@ -21,6 +21,7 @@ class AttendanceService {
         'month': month,
         'year': year,
       });
+
       
       if (response.data['status'] != 'ok') {
         throw Exception('Error al obtener los datos de asistencia');

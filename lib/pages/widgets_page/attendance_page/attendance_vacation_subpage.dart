@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:time_gate/core/models/attendance_status.model.dart';
 import 'package:time_gate/pages/widgets_page/attendance_page/attendance_vacation_status_card.dart';
 import 'package:time_gate/pages/widgets_page/widgets_page.dart';
 import 'package:time_gate/themes/custom_styles.dart';
 import 'package:time_gate/utils/responsive_utils.dart';
 
 class AttendanceVacationSubage extends StatelessWidget {
-  const AttendanceVacationSubage({super.key});
+
+  final AttendanceStats? stats;
+  const AttendanceVacationSubage({super.key, this.stats});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +27,12 @@ class AttendanceVacationSubage extends StatelessWidget {
                 child: Text('Días de Vacaciones', style: titleOsw24Bold500Secondary.copyWith(fontSize: 24*fontSizedGrow),)
               ),
               const SizedBox(height: 10,),
-              AttendanceVacationCard( totalDays: '12 días', usedDays: '5 días', remainingDays: '7 días', buttonTitle: 'Solicitar Vacaciones',), 
+              AttendanceVacationCard( 
+                totalDays: (stats?.totalVacaciones ?? 0).toInt().toString(), 
+                usedDays: (stats?.vacacionesTomadas ?? 0).toInt().toString(), 
+                remainingDays: ((stats?.totalVacaciones ?? 0).toInt() - (stats?.vacacionesTomadas ?? 0).toInt()).toString() , 
+                buttonTitle: 'Solicitar Vacaciones',
+              ), 
             ],
           ),
         ),

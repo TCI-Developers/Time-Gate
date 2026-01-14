@@ -48,7 +48,7 @@ class _AttendancePageState extends State<AttendancePage> {
     String type = 'asistencias';
     if (tabIndex == 1) type = 'vacaciones';
     if (tabIndex == 2) type = 'permisos';
-    if (tabIndex == 3) type = 'ausencias';
+    // if (tabIndex == 3) type = 'ausencias';
 
     attendanceProv.clear();
 
@@ -69,13 +69,19 @@ class _AttendancePageState extends State<AttendancePage> {
       return [];
     }
   }
+
+  final DateTime? inicioVacaciones = DateTime(2025, 11, 1);
+
+  final DateTime? finVacaciones = DateTime(2025, 11, 10);
+    
   
   @override
   Widget build(BuildContext context) {
     final tabIndexPrincipal = context.watch<TabbarProvider>().selectedMEnuOption;
     final attendanceProv = context.watch<AttendanceProvider>();
     final stats = attendanceProv.stats;
-    
+
+    // print('stats desde $stats');
     final double maxContainerWidth = getMaxContentWidth(context);
     final titleOsw30Bold500Secondary = Theme.of(context).textTheme.titleOsw30Bold500Secondary;
     final fontSizedGrow = getResponsiveScaleFactor(context);
@@ -91,10 +97,7 @@ class _AttendancePageState extends State<AttendancePage> {
       );
     }).toList();
 
-    final DateTime? inicioVacaciones = DateTime(2025, 11, 1);
-
-  final DateTime? finVacaciones = DateTime(2025, 11, 10);
-  int tabIndex = 0;
+    
 
     // 2. Lógica de disparo (Lazy Loading)
     if (tabIndexPrincipal == 1 && 
@@ -119,7 +122,14 @@ class _AttendancePageState extends State<AttendancePage> {
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     children: [
-                      Text('Asistencia', style: titleOsw30Bold500Secondary.copyWith(fontSize: 30*fontSizedGrow),),
+                      Text(
+                        tabIndex == 0 
+                        ? 'Asistencia'
+                        : tabIndex == 1 
+                        ? 'Vacaciones'
+                        : 'Permisos', 
+                        style: titleOsw30Bold500Secondary.copyWith(fontSize: 30*fontSizedGrow),
+                      ),
                       const SizedBox(height: 20,),
                      
                       ReusableCalendar(
@@ -127,7 +137,9 @@ class _AttendancePageState extends State<AttendancePage> {
                         key: ValueKey('cal-${_currentFocusedDate.month}-${attendanceProv.stats == null}'),
                         faltas: _parseDates(stats?.fechaAusencias ?? []),
                         retardos: retardosList,
-                        asistencias:  asistenciasLimpias, 
+                        asistencias:  asistenciasLimpias.isNotEmpty 
+                          ? asistenciasLimpias 
+                          : _parseDates(stats?.fechaPermisos ?? []), 
                         rangeStart: inicioVacaciones,
                         rangeEnd: finVacaciones,
                         // vacacionesRangos: listaPrueba,
@@ -181,9 +193,9 @@ class _AttendancePageState extends State<AttendancePage> {
                       if(tabIndex == 0)
                         AttendanceAttendanceSubage(data: attendanceProv.entries, stats: stats,)
                       else if(tabIndex ==1)
-                         AttendanceVacationSubage()
-                      else
-                        AttendanceWorkpermitsSubpage()
+                         AttendanceVacationSubage(stats: stats)
+                      else if(tabIndex ==2)
+                        AttendanceWorkpermitsSubpage(stats: stats)
                     ],
                   ),
                 ),

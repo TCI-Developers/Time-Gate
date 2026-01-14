@@ -10,10 +10,10 @@ class AttendanceStats {
   final double? totalAsistencias;
   final dynamic horasPermisos;
   final dynamic horasExtra;
-  final List<String> fechaRetardo;
-  final List<String> fechaVacaciones;
-  final List<String> fechaPermisos;
-  final List<String> fechaAusencias;
+  final List<String>? fechaRetardo;
+  final List<String>? fechaVacaciones;
+  final List<String>? fechaPermisos;
+  final List<String>? fechaAusencias;
   final double? totalAusencias;
   final double? retardosPermitidos;
   final double? permisosPermitidos;
@@ -21,7 +21,7 @@ class AttendanceStats {
   final String? tiempoTomado;
   final double? diasExtra;
   final double? ausenciasPermitidas;
-  final List<String> fechaAsistencia;
+  final List<String>? fechaAsistencia;
   
 
   AttendanceStats({
@@ -36,10 +36,10 @@ class AttendanceStats {
     this.totalAsistencias,
     this.horasPermisos,
     this.horasExtra,
-    required this.fechaRetardo,
-    required this.fechaVacaciones, 
-    required this.fechaPermisos,
-    required this.fechaAusencias,
+    this.fechaRetardo,
+    this.fechaVacaciones, 
+    this.fechaPermisos,
+    this.fechaAusencias,
     this.totalAusencias,
     this.retardosPermitidos,
     this.permisosPermitidos,
@@ -47,7 +47,7 @@ class AttendanceStats {
     this.tiempoTomado,
     this.diasExtra,
     this.ausenciasPermitidas,
-    required this.fechaAsistencia
+    this.fechaAsistencia
     
   });
 
@@ -65,16 +65,24 @@ class AttendanceStats {
       horasPermisos: json['horas_permisos'],
       horasExtra: json['horas_extra'],
       fechaVacaciones: [],
-      fechaRetardo: List<String>.from(json['fecha_retardo'] ?? []),
-      fechaPermisos: List<String>.from(json['fecha_permisos'] ?? []),
-      fechaAusencias: List<String>.from(json['fecha_ausencias'] ?? []),
+      fechaRetardo: json['fecha_retardo'] != null 
+          ? List<String>.from(json['fecha_retardo']) 
+          : null,
+      fechaPermisos: json['fecha_permisos'] != null 
+          ? List<String>.from(json['fecha_permisos']) 
+          : null,
+      fechaAusencias: json['fecha_ausencias'] != null 
+          ? List<String>.from(json['fecha_ausencias']) 
+          : null,
       totalAusencias: json['total_ausencias']?.toDouble(),
       retardosPermitidos: json['retardos_permitidos']?.toDouble(),
       permisosPermitidos: json['permisos_permitidos']?.toDouble(),
       totalVacaciones: json['total_vacaciones']?.toDouble(),
       diasExtra: json['dias_extra']?.toDouble(),
       ausenciasPermitidas: json['ausencias_permitidas']?.toDouble(),
-      fechaAsistencia: List<String>.from(json['fecha_asistencias'] ?? [])
+      fechaAsistencia: json['fecha_asistencias'] != null 
+          ? List<String>.from(json['fecha_asistencias']) 
+          : null,
       
     );
   }

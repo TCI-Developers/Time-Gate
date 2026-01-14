@@ -30,8 +30,7 @@ class AttendanceProvider with ChangeNotifier {
         month: month, 
         year: year
       );
-
-      print('meroooooooooooo ${result.data}');
+      
       stats = result.stats;
       entries = result.data;
       
