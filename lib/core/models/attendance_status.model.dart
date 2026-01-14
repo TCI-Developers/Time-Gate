@@ -21,6 +21,7 @@ class AttendanceStats {
   final String? tiempoTomado;
   final double? diasExtra;
   final double? ausenciasPermitidas;
+  final List<String> fechaAsistencia;
   
 
   AttendanceStats({
@@ -36,7 +37,7 @@ class AttendanceStats {
     this.horasPermisos,
     this.horasExtra,
     required this.fechaRetardo,
-    required this.fechaVacaciones,
+    required this.fechaVacaciones, 
     required this.fechaPermisos,
     required this.fechaAusencias,
     this.totalAusencias,
@@ -46,6 +47,8 @@ class AttendanceStats {
     this.tiempoTomado,
     this.diasExtra,
     this.ausenciasPermitidas,
+    required this.fechaAsistencia
+    
   });
 
   factory AttendanceStats.fromJson(Map<String, dynamic> json) {
@@ -61,8 +64,8 @@ class AttendanceStats {
       totalAsistencias: json['total_asistencias']?.toDouble(),
       horasPermisos: json['horas_permisos'],
       horasExtra: json['horas_extra'],
+      fechaVacaciones: [],
       fechaRetardo: List<String>.from(json['fecha_retardo'] ?? []),
-      fechaVacaciones: List<String>.from(json['fecha_vacaciones'] ?? []),
       fechaPermisos: List<String>.from(json['fecha_permisos'] ?? []),
       fechaAusencias: List<String>.from(json['fecha_ausencias'] ?? []),
       totalAusencias: json['total_ausencias']?.toDouble(),
@@ -70,7 +73,8 @@ class AttendanceStats {
       permisosPermitidos: json['permisos_permitidos']?.toDouble(),
       totalVacaciones: json['total_vacaciones']?.toDouble(),
       diasExtra: json['dias_extra']?.toDouble(),
-      ausenciasPermitidas: json['ausencias_permitidas']?.toDouble()
+      ausenciasPermitidas: json['ausencias_permitidas']?.toDouble(),
+      fechaAsistencia: List<String>.from(json['fecha_asistencias'] ?? [])
       
     );
   }

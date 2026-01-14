@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
+// import 'package:time_gate/core/models/attendance_status.model.dart';
 import 'package:time_gate/themes/app_theme.dart';
 import 'package:time_gate/themes/custom_styles.dart';
 import 'package:time_gate/utils/responsive_utils.dart';
@@ -16,6 +17,7 @@ class ReusableCalendar extends StatefulWidget {
   final List<DateTime>? asistencias;
   final DateTime? rangeStart;
   final DateTime? rangeEnd;
+  // final List<VacacionRango>? vacacionesRangos;
   final DateTime? initialFocusedDay;
 
   final Function(DateTime focusedDay)? onPageChanged;
@@ -27,6 +29,7 @@ class ReusableCalendar extends StatefulWidget {
     this.asistencias,
     this.rangeStart,
     this.rangeEnd,
+    // this.vacacionesRangos,
     this.initialFocusedDay, 
     this.onPageChanged,
   });
@@ -48,9 +51,22 @@ class _ReusableCalendarState extends State<ReusableCalendar> {
   @override
   void initState() {
     super.initState();
-    // 🚨 Inicia en el día provisto, el inicio del rango, o el mes actual (DateTime.now())
+    // Inicia en el día provisto, el inicio del rango, o el mes actual (DateTime.now())
     DateTime initial = widget.initialFocusedDay ?? widget.rangeStart ?? DateTime.now();
     _focusedDay = DateTime(initial.year, initial.month, 1);
+
+    //quitar    
+    // 1. Intentamos obtener el primer día del primer rango de vacaciones si existe
+    // DateTime? firstVacationDay;
+    // if (widget.vacacionesRangos != null && widget.vacacionesRangos!.isNotEmpty) {
+    //   firstVacationDay = widget.vacacionesRangos!.first.inicio;
+    // }
+
+    // // 2. Lógica de prioridad para el enfoque inicial:
+    // //    Día provisto > Primer día de vacaciones > Día actual
+    // DateTime initial = widget.initialFocusedDay ?? firstVacationDay ?? DateTime.now();
+    
+    // _focusedDay = DateTime(initial.year, initial.month, 1);
   }
 
   @override
@@ -124,6 +140,14 @@ void _onPageChanged(DateTime newFocusedDay) {
       asistencias: safeAsistencias,
     );
 
+    // 3. ACTUALIZACIÓN: Pasar la lista de rangos al builder quitarrrrr
+    // final calendarBuilders = CustomCalendarBuilders(
+    //   vacaciones: widget.vacacionesRangos ?? [], // Cambiado aquí
+    //   faltas: safeFaltas,
+    //   retardos: safeRetardos,
+    //   asistencias: safeAsistencias,
+    // );
+
     final titleOsw24Bold500Secondary = Theme.of(context).textTheme.titleOsw24Bold500Secondary;
     final fontSizedGrow = getResponsiveScaleFactor(context);
     
@@ -182,6 +206,7 @@ void _onPageChanged(DateTime newFocusedDay) {
                 
                 rangeStartDay: widget.rangeStart,
                 rangeEndDay: widget.rangeEnd,
+                
                 rangeSelectionMode: RangeSelectionMode.toggledOff,
             
                 // Handlers nulos para evitar interacción

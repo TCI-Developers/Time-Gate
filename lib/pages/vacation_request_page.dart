@@ -142,14 +142,14 @@ class _VacationRequestPageState extends State<VacationRequestPage> {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  ReusableCalendar(
-                    faltas: faltasAMostrar,
-                    retardos: retardosAMostrar,
-                    asistencias: asistenciasAMostrar,
-                    rangeStart: inicioVacaciones,
-                    rangeEnd: finVacaciones,
-                    initialFocusedDay: DateTime(2025, 10, 12),
-                  ),
+                  // ReusableCalendar(
+                  //   faltas: faltasAMostrar,
+                  //   retardos: retardosAMostrar,
+                  //   asistencias: asistenciasAMostrar,
+                  //   rangeStart: inicioVacaciones,
+                  //   rangeEnd: finVacaciones,
+                  //   initialFocusedDay: DateTime(2025, 10, 12),
+                  // ),
                   const SizedBox(height: 80),
                   Row(
                     children: [

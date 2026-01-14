@@ -25,21 +25,18 @@ class AttendanceProvider with ChangeNotifier {
       errorMessage = null;
       notifyListeners();
       
-      print('mero pues mero');
       final result = await _service.getAttendanceReport(
         type: type, 
         month: month, 
         year: year
       );
 
-      print('meroooooooooooo $result');
+      print('meroooooooooooo ${result.data}');
       stats = result.stats;
       entries = result.data;
       
       // print(entries);
-    } catch (e,stacktrace) {
-      print('ERROR EN PROVIDER: $e');
-      print('STACKTRACE: $stacktrace'); // Esto te dirá la línea exacta del fallo
+    } catch (e) {
       errorMessage = e is Exception 
       ? e.toString().replaceAll('Exception: ', '') 
       : 'Ocurrió un error inesperado';

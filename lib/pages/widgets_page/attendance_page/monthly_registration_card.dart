@@ -53,7 +53,8 @@ class MonthlyRegistrationCard extends StatelessWidget {
                   width: 40*fontSizedGrow,
                   height: 40*fontSizedGrow,
                   child: CircularProgressIndicator(
-                    value: (1.0 - (ausencias / ausenciasPermitidas)),                    
+                    // value: (1.0 - (ausencias / ausenciasPermitidas)),                    
+                    value: (ausenciasPermitidas > 0) ? (1.0 - (ausencias / ausenciasPermitidas)) : 1.0,                 
                     strokeWidth: 4,                   
                     backgroundColor: const Color.fromARGB(255, 187, 51, 41), 
                     valueColor: AlwaysStoppedAnimation<Color>(const Color.fromARGB(255, 255, 193, 193)),
@@ -63,17 +64,19 @@ class MonthlyRegistrationCard extends StatelessWidget {
                   width: 70*fontSizedGrow,
                   height: 70*fontSizedGrow,
                   child: CircularProgressIndicator(
-                    value: (1.0 - (asistencia/asistenciasMensuales)),                    
+                    // value: (1.0 - (asistencia/asistenciasMensuales)),                    
+                    value: (ausenciasPermitidas > 0) ? (1-(vacaciones / totalVacaciones)) : 1.0,                    
                     strokeWidth: 4,                   
-                    backgroundColor: const Color.fromARGB(255, 255, 193, 193), 
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.yellow),
+                    backgroundColor: Colors.yellow, 
+                    valueColor: AlwaysStoppedAnimation<Color>(const Color.fromARGB(255, 255, 193, 193)),
                   ),
                 ),
                SizedBox(
                   width: 105*fontSizedGrow,
                   height: 105*fontSizedGrow,
                   child: CircularProgressIndicator(
-                    value: (1.0 - (asistencia / asistenciasMensuales)),                    
+                    // value: (1.0 - (asistencia / asistenciasMensuales)),                    
+                    value: (asistenciasMensuales > 0) ? (1.0 - (asistencia / asistenciasMensuales)) : 1.0,                    
                     strokeWidth: 4,                   
                     backgroundColor: const Color.fromARGB(255, 54, 125, 56), 
                     valueColor: AlwaysStoppedAnimation<Color>(const Color.fromARGB(255, 255, 193, 193)),

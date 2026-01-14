@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+// import 'package:time_gate/core/models/attendance_status.model.dart';
 import 'package:time_gate/pages/widgets_page/attendance_page/attendance_workpermits_subpage.dart';
 import 'package:time_gate/pages/widgets_page/widgets_page.dart';
 import 'package:time_gate/providers/attendance_provider.dart';
@@ -38,6 +39,7 @@ class _AttendancePageState extends State<AttendancePage> {
       }
     });
   }
+  
 
   void _fetchAttendance() {
     final attendanceProv = context.read<AttendanceProvider>();
@@ -67,7 +69,6 @@ class _AttendancePageState extends State<AttendancePage> {
       return [];
     }
   }
-
   
   @override
   Widget build(BuildContext context) {
@@ -78,6 +79,22 @@ class _AttendancePageState extends State<AttendancePage> {
     final double maxContainerWidth = getMaxContentWidth(context);
     final titleOsw30Bold500Secondary = Theme.of(context).textTheme.titleOsw30Bold500Secondary;
     final fontSizedGrow = getResponsiveScaleFactor(context);
+
+    final List<DateTime> asistenciasOriginales = _parseDates(stats?.fechaAsistencia ?? []);
+    final List<DateTime> retardosList = _parseDates(stats?.fechaRetardo ?? []);
+
+    final List<DateTime> asistenciasLimpias = asistenciasOriginales.where((asistencia) {
+      return !retardosList.any((retardo) => 
+        asistencia.year == retardo.year && 
+        asistencia.month == retardo.month && 
+        asistencia.day == retardo.day
+      );
+    }).toList();
+
+    final DateTime? inicioVacaciones = DateTime(2025, 11, 1);
+
+  final DateTime? finVacaciones = DateTime(2025, 11, 10);
+  int tabIndex = 0;
 
     // 2. Lógica de disparo (Lazy Loading)
     if (tabIndexPrincipal == 1 && 
@@ -109,12 +126,11 @@ class _AttendancePageState extends State<AttendancePage> {
                         
                         key: ValueKey('cal-${_currentFocusedDate.month}-${attendanceProv.stats == null}'),
                         faltas: _parseDates(stats?.fechaAusencias ?? []),
-                        retardos: _parseDates(stats?.fechaRetardo ?? []),
-                        asistencias: [], 
-                        rangeStart: stats?.fechaVacaciones.isNotEmpty == true 
-                            ? DateTime.parse(stats!.fechaVacaciones.first) : null,
-                        rangeEnd: stats?.fechaVacaciones.isNotEmpty == true 
-                            ? DateTime.parse(stats!.fechaVacaciones.last) : null,
+                        retardos: retardosList,
+                        asistencias:  asistenciasLimpias, 
+                        rangeStart: inicioVacaciones,
+                        rangeEnd: finVacaciones,
+                        // vacacionesRangos: listaPrueba,
                         initialFocusedDay: _currentFocusedDate, // ⬅️ USAR LA VARIABLE
                         
                         // 🆕 CONECTAR EL CAMBIO DE MES
