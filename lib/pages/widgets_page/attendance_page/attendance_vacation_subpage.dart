@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:time_gate/core/models/attendance_status.model.dart';
+import 'package:time_gate/core/models/attendance_stats.model.dart';
 import 'package:time_gate/pages/widgets_page/attendance_page/attendance_vacation_status_card.dart';
 import 'package:time_gate/pages/widgets_page/widgets_page.dart';
 import 'package:time_gate/themes/custom_styles.dart';

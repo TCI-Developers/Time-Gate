@@ -11,7 +11,7 @@ class AttendanceStats {
   final dynamic horasPermisos;
   final dynamic horasExtra;
   final List<String>? fechaRetardo;
-  final List<String>? fechaVacaciones;
+  final List<VacacionRange>? fechaVacaciones;
   final List<String>? fechaPermisos;
   final List<String>? fechaAusencias;
   final double? totalAusencias;
@@ -64,7 +64,11 @@ class AttendanceStats {
       totalAsistencias: json['total_asistencias']?.toDouble(),
       horasPermisos: json['horas_permisos'],
       horasExtra: json['horas_extra'],
-      fechaVacaciones: [],
+      fechaVacaciones: json['fecha_vacaciones'] != null 
+          ? (json['fecha_vacaciones'] as List)
+              .map((v) => VacacionRange.fromJson(v))
+              .toList()
+          : null,
       fechaRetardo: json['fecha_retardo'] != null 
           ? List<String>.from(json['fecha_retardo']) 
           : null,
@@ -84,6 +88,20 @@ class AttendanceStats {
           ? List<String>.from(json['fecha_asistencias']) 
           : null,
       
+    );
+  }
+}
+
+class VacacionRange {
+  final DateTime inicio;
+  final DateTime fin;
+
+  VacacionRange({required this.inicio, required this.fin});
+
+  factory VacacionRange.fromJson(Map<String, dynamic> json) {
+    return VacacionRange(
+      inicio: DateTime.parse(json['inicio']),
+      fin: DateTime.parse(json['fin']),
     );
   }
 }

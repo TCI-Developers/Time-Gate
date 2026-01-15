@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:time_gate/core/models/attendance_entry.dart';
-import 'package:time_gate/core/models/attendance_status.model.dart';
+import 'package:time_gate/core/models/attendance_stats.model.dart';
 import 'package:time_gate/core/network/api_client.dart';
 
 class AttendanceService {
