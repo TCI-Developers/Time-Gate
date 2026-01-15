@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:time_gate/core/models/attendance_entry.dart';
-import 'package:time_gate/core/models/attendance_status.model.dart';
+import 'package:time_gate/core/models/attendance_stats.model.dart';
 import 'package:time_gate/pages/widgets_page/widgets_page.dart';
 import 'package:time_gate/utils/calendar_data.dart';
 

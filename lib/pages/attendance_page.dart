@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-// import 'package:time_gate/core/models/attendance_status.model.dart';
+import 'package:time_gate/core/models/attendance_stats.model.dart';
+// import 'package:time_gate/core/models/attendance_stats.model.dart';
 import 'package:time_gate/pages/widgets_page/attendance_page/attendance_workpermits_subpage.dart';
 import 'package:time_gate/pages/widgets_page/widgets_page.dart';
 import 'package:time_gate/providers/attendance_provider.dart';
@@ -80,6 +81,7 @@ class _AttendancePageState extends State<AttendancePage> {
     final tabIndexPrincipal = context.watch<TabbarProvider>().selectedMEnuOption;
     final attendanceProv = context.watch<AttendanceProvider>();
     final stats = attendanceProv.stats;
+    final List<VacacionRange> vacacionesRangos = stats?.fechaVacaciones ?? [];
 
     // print('stats desde $stats');
     final double maxContainerWidth = getMaxContentWidth(context);
@@ -96,8 +98,6 @@ class _AttendancePageState extends State<AttendancePage> {
         asistencia.day == retardo.day
       );
     }).toList();
-
-    
 
     // 2. Lógica de disparo (Lazy Loading)
     if (tabIndexPrincipal == 1 && 
@@ -140,9 +140,9 @@ class _AttendancePageState extends State<AttendancePage> {
                         asistencias:  asistenciasLimpias.isNotEmpty 
                           ? asistenciasLimpias 
                           : _parseDates(stats?.fechaPermisos ?? []), 
+                        vacacionesRangos: vacacionesRangos,
                         rangeStart: inicioVacaciones,
                         rangeEnd: finVacaciones,
-                        // vacacionesRangos: listaPrueba,
                         initialFocusedDay: _currentFocusedDate, // ⬅️ USAR LA VARIABLE
                         
                         // 🆕 CONECTAR EL CAMBIO DE MES

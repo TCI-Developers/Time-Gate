@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-// import 'package:time_gate/core/models/attendance_status.model.dart';
+import 'package:time_gate/core/models/attendance_stats.model.dart';
 import '../utils/calendar_data.dart'; // Importa tus constantes
 import 'package:intl/intl.dart';
 // Esta clase auxiliar contendrá toda la lógica de renderizado visual.
@@ -10,7 +10,7 @@ class CustomCalendarBuilders {
   final List<DateTime> asistencias;
   final DateTime? rangeStart;
   final DateTime? rangeEnd;
-  // final List<VacacionRango> vacaciones;
+  final List<VacacionRange> vacaciones;
 
   CustomCalendarBuilders({
     required this.faltas,
@@ -18,7 +18,7 @@ class CustomCalendarBuilders {
     required this.asistencias,
     this.rangeStart,
     this.rangeEnd,
-    // required this.vacaciones,
+    required this.vacaciones,
   });
   
   // Función auxiliar para verificar si un día tiene una marca
@@ -58,95 +58,103 @@ class CustomCalendarBuilders {
         );
     },
   
-    rangeStartBuilder: (context, day, focusedDay) {
-      final screenWidth = MediaQuery.of(context).size.width;
-      if (isSameDay(day, rangeStart)) {
-        return Container(
-          margin: EdgeInsets.symmetric(vertical: screenWidth > 450 ? 6 : 12),
-          decoration: const BoxDecoration(
-            color: kColorVacaciones,
+    // rangeStartBuilder: (context, day, focusedDay) {
+    //   final screenWidth = MediaQuery.of(context).size.width;
+    //   if (isSameDay(day, rangeStart)) {
+    //     return Container(
+    //       margin: EdgeInsets.symmetric(vertical: screenWidth > 450 ? 6 : 12),
+    //       decoration: const BoxDecoration(
+    //         color: kColorVacaciones,
          
-            borderRadius: BorderRadius.horizontal(left: Radius.circular(100)),
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            '${day.day}',
-            style: const TextStyle(color: Colors.black),
-          ),
-        );
-      }
-      return null;
-    },
+    //         borderRadius: BorderRadius.horizontal(left: Radius.circular(100)),
+    //       ),
+    //       alignment: Alignment.center,
+    //       child: Text(
+    //         '${day.day}',
+    //         style: const TextStyle(color: Colors.black),
+    //       ),
+    //     );
+    //   }
+    //   return null;
+    // },
 
     
-    rangeEndBuilder: (context, day, focusedDay) {
-      final screenWidth = MediaQuery.of(context).size.width;
-      
-      if (isSameDay(day, rangeEnd)) {
-        return Container(
-         
-          margin: EdgeInsets.symmetric(vertical: screenWidth > 450 ? 6 : 12),
-          decoration: const BoxDecoration(
-
-            color: kColorVacaciones,
-            
-            borderRadius: BorderRadius.horizontal(right: Radius.circular(100)),
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            '${day.day}',
-            style: const TextStyle(color: Colors.black),
-          ),
-        );
-      }
-      return null;
-    },
-    // prioritizedBuilder: (context, day, focusedDay) {
+    // rangeEndBuilder: (context, day, focusedDay) {
     //   final screenWidth = MediaQuery.of(context).size.width;
       
-    //   for (var rango in vacaciones) {
-    //     // Normalizamos fechas para comparar solo día/mes/año
-    //     final d = DateTime(day.year, day.month, day.day);
-    //     final s = DateTime(rango.inicio.year, rango.inicio.month, rango.inicio.day);
-    //     final e = DateTime(rango.fin.year, rango.fin.month, rango.fin.day);
+    //   if (isSameDay(day, rangeEnd)) {
+    //     return Container(
+         
+    //       margin: EdgeInsets.symmetric(vertical: screenWidth > 450 ? 6 : 12),
+    //       decoration: const BoxDecoration(
 
-    //     bool isStart = isSameDay(d, s);
-    //     bool isEnd = isSameDay(d, e);
-    //     bool isInRange = d.isAfter(s) && d.isBefore(e);
-
-    //     if (isStart || isEnd || isInRange) {
-    //       return Container(
-    //         margin: EdgeInsets.symmetric(vertical: screenWidth > 450 ? 6 : 12),
-    //         decoration: BoxDecoration(
-    //           color: kColorVacaciones,
-    //           borderRadius: BorderRadius.only(
-    //             topLeft: isStart ? const Radius.circular(100) : Radius.zero,
-    //             bottomLeft: isStart ? const Radius.circular(100) : Radius.zero,
-    //             topRight: isEnd ? const Radius.circular(100) : Radius.zero,
-    //             bottomRight: isEnd ? const Radius.circular(100) : Radius.zero,
-    //           ),
-    //         ),
-    //         alignment: Alignment.center,
-    //         child: Text(
-    //           '${day.day}',
-    //           style: const TextStyle(color: Colors.black),
-    //         ),
-    //       );
-    //     }
+    //         color: kColorVacaciones,
+            
+    //         borderRadius: BorderRadius.horizontal(right: Radius.circular(100)),
+    //       ),
+    //       alignment: Alignment.center,
+    //       child: Text(
+    //         '${day.day}',
+    //         style: const TextStyle(color: Colors.black),
+    //       ),
+    //     );
     //   }
-    //   return null; // Si no es rango de vacación, sigue a los demás builders
+    //   return null;
     // },
+    prioritizedBuilder: (context, day, focusedDay) {
+      final screenWidth = MediaQuery.of(context).size.width;
+      
+      for (var rango in vacaciones) {
+        // Normalizamos fechas para comparar solo día/mes/año
+        final d = DateTime(day.year, day.month, day.day);
+        final s = DateTime(rango.inicio.year, rango.inicio.month, rango.inicio.day);
+        final e = DateTime(rango.fin.year, rango.fin.month, rango.fin.day);
+
+        bool isStart = isSameDay(d, s);
+        bool isEnd = isSameDay(d, e);
+        bool isInRange = d.isAfter(s) && d.isBefore(e);
+
+        if (isStart || isEnd || isInRange) {
+          return Container(
+            margin: EdgeInsets.symmetric(vertical: screenWidth > 450 ? 6 : 12),
+            decoration: BoxDecoration(
+              color: kColorVacaciones,
+              borderRadius: BorderRadius.only(
+                topLeft: isStart ? const Radius.circular(100) : Radius.zero,
+                bottomLeft: isStart ? const Radius.circular(100) : Radius.zero,
+                topRight: isEnd ? const Radius.circular(100) : Radius.zero,
+                bottomRight: isEnd ? const Radius.circular(100) : Radius.zero,
+              ),
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              '${day.day}',
+              style: const TextStyle(color: Colors.black),
+            ),
+          );
+        }
+      }
+      return null; // Si no es rango de vacación, sigue a los demás builders
+    },
     
     defaultBuilder: (context, day, focusedDay) {
       
    
-      bool isDayInVacationRange = (rangeStart != null && rangeEnd != null && 
-                                 (day.isAfter(rangeStart!) || isSameDay(day, rangeStart!)) && 
-                                 (day.isBefore(rangeEnd!) || isSameDay(day, rangeEnd!)));
+      // bool isDayInVacationRange = (rangeStart != null && rangeEnd != null && 
+      //                            (day.isAfter(rangeStart!) || isSameDay(day, rangeStart!)) && 
+      //                            (day.isBefore(rangeEnd!) || isSameDay(day, rangeEnd!)));
 
-      if (isDayInVacationRange) {
-          return null;
-      }
+      // if (isDayInVacationRange) {
+      //     return null;
+      // }
+
+      bool isDayInVacation = vacaciones.any((rango) {
+        final d = DateTime(day.year, day.month, day.day);
+        return (d.isAtSameMomentAs(rango.inicio) || d.isAfter(rango.inicio)) &&
+               (d.isAtSameMomentAs(rango.fin) || d.isBefore(rango.fin));
+      });
+
+      if (isDayInVacation) return null;
       
       // 2. Definición de las marcas
       bool isFalta = _isMarkedDay(day, faltas);
