@@ -99,15 +99,6 @@ class _AttendancePageState extends State<AttendancePage> {
       );
     }).toList();
 
-    // 2. Lógica de disparo (Lazy Loading)
-    if (tabIndexPrincipal == 1 && 
-        attendanceProv.entries.isEmpty && 
-        !attendanceProv.isLoading && 
-        attendanceProv.errorMessage == null) {
-      
-      Future.microtask(() => _fetchAttendance());
-    }
-
     return Stack(
       children: [
         RefreshIndicator(
@@ -193,9 +184,9 @@ class _AttendancePageState extends State<AttendancePage> {
                       if(tabIndex == 0)
                         AttendanceAttendanceSubage(data: attendanceProv.entries, stats: stats,)
                       else if(tabIndex ==1)
-                         AttendanceVacationSubage(stats: stats)
+                         AttendanceVacationSubage(data: attendanceProv.entries, stats: stats,)
                       else if(tabIndex ==2)
-                        AttendanceWorkpermitsSubpage(stats: stats)
+                        AttendanceWorkpermitsSubpage(data: attendanceProv.entries, stats: stats,)
                     ],
                   ),
                 ),

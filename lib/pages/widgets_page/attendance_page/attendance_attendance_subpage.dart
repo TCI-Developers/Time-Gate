@@ -103,7 +103,7 @@ class AttendanceAttendanceSubage extends StatelessWidget {
                 checkout: entry.checkOut ?? '--:--',
                 
                 // 2. Convertimos la lista de pausas a un solo String separado por guiones
-                pause: entry.pause.isEmpty ? 'Sin pausas' : entry.pause.join(' - '),
+                pause: (entry.pause ?? []).isEmpty ? 'Sin pausas' : entry.pause!.join(' - '),
                 
                 // 3. Usamos totalTrabajado (el dynamic lo pasamos a String)
                 hoursworked: entry.totalTrabajado?.toString() ?? '0h 00m',

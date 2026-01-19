@@ -24,16 +24,16 @@ class AttendanceProvider with ChangeNotifier {
       isLoading = true;
       errorMessage = null;
       notifyListeners();
-      
       final result = await _service.getAttendanceReport(
         type: type, 
         month: month, 
         year: year
       );
+
+      
       
       stats = result.stats;
-      entries = result.data;
-      
+      entries = result.data;      
       // print(entries);
     } catch (e) {
       errorMessage = e is Exception 

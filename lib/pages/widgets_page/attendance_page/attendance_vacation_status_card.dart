@@ -8,8 +8,10 @@ class AttendanceVacationStatusCard extends StatelessWidget {
   final String vacationRange;
   final String status;
   final String type;
+  final String diasTomados;
+  final String totalDias;
 
-  const AttendanceVacationStatusCard({super.key, required this.vacationRange, required this.status, required this.type});
+  const AttendanceVacationStatusCard({super.key, required this.vacationRange, required this.status, required this.type, required this.diasTomados, required this.totalDias});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +58,12 @@ class AttendanceVacationStatusCard extends StatelessWidget {
               const SizedBox(height: 5,),
               Align(
                 alignment: AlignmentGeometry.centerLeft,
-                child: Text('3 Días tomados de vacaciones de 12 dias dispinibles', style: textOsw11boldPrimary.copyWith(fontSize: 11*fontSizedGrow),)
+                child: Text(
+                  type == "vacaciones" 
+                  ? '$diasTomados Días tomados de vacaciones de $totalDias dias dispinibles'
+                  : '$diasTomados Permiso solicitado', 
+                  style: textOsw11boldPrimary.copyWith(fontSize: 11*fontSizedGrow),
+                )
               ),
             ],
           ),

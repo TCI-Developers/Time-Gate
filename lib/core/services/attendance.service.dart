@@ -23,6 +23,7 @@ class AttendanceService {
       });
 
       
+      
       if (response.data['status'] != 'ok') {
         throw Exception('Error al obtener los datos de asistencia');
       }
@@ -33,7 +34,6 @@ class AttendanceService {
           .map((e) => AttendanceEntry.fromJson(e))
           .toList();
 
-      
 
       return (
         stats: stats,

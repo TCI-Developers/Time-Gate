@@ -17,7 +17,7 @@ class ApiClient {
   ApiClient._internal() {
     _dio = Dio(
       BaseOptions(
-        baseUrl: 'https://5d1ab2cf30c1.ngrok-free.app/api',
+        baseUrl: 'https://b15b2704ea86.ngrok-free.app/api',
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
         headers: {

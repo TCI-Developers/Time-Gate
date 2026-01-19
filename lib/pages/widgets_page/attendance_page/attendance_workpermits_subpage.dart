@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:time_gate/core/models/attendance_entry.dart';
 import 'package:time_gate/core/models/attendance_stats.model.dart';
 import 'package:time_gate/pages/widgets_page/attendance_page/attendance_vacation_card.dart';
 import 'package:time_gate/pages/widgets_page/attendance_page/attendance_vacation_status_card.dart';
+// import 'package:time_gate/pages/widgets_page/attendance_page/attendance_vacation_status_card.dart';
 import 'package:time_gate/themes/custom_styles.dart';
 
 class AttendanceWorkpermitsSubpage extends StatelessWidget {
   final AttendanceStats? stats;
-  const AttendanceWorkpermitsSubpage({super.key, this.stats});
+  final List<AttendanceEntry>? data;
+  const AttendanceWorkpermitsSubpage({super.key, this.stats, this.data});
 
 
   @override
@@ -35,10 +38,27 @@ class AttendanceWorkpermitsSubpage extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20,),
-        SizedBox(
-          width: double.infinity,
-          child: AttendanceVacationStatusCard(vacationRange: '11/Jul/2025 al 15/Jul/2025', status: 'Aprobado',type: 'Exámenes médicos',),
-        )
+      
+        if (data == null || data!.isEmpty)
+            const Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Text('No hay registros disponibles para este mes'),
+            )
+          else
+            ...data!.map((entry) => Padding(
+              padding: const EdgeInsets.only(bottom: 15),
+              child: SizedBox(
+                  width: double.infinity,
+                  child: AttendanceVacationStatusCard(
+                    vacationRange: entry.fechaRango ?? '--', 
+                    status: entry.status ?? '---', 
+                    type: entry.type ?? '--',
+                    diasTomados: (entry.diasSolicitados).toString(),
+                    totalDias: (entry.totalDias).toString(),
+                  ),
+                ),
+            ),
+            ),
       ],
     );
   }
