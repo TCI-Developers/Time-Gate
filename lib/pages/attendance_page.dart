@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:time_gate/core/models/attendance_stats.model.dart';
-// import 'package:time_gate/core/models/attendance_stats.model.dart';
 import 'package:time_gate/pages/widgets_page/attendance_page/attendance_workpermits_subpage.dart';
 import 'package:time_gate/pages/widgets_page/widgets_page.dart';
 import 'package:time_gate/providers/attendance_provider.dart';
@@ -78,7 +77,6 @@ class _AttendancePageState extends State<AttendancePage> {
   
   @override
   Widget build(BuildContext context) {
-    final tabIndexPrincipal = context.watch<TabbarProvider>().selectedMEnuOption;
     final attendanceProv = context.watch<AttendanceProvider>();
     final stats = attendanceProv.stats;
     final List<VacacionRange> vacacionesRangos = stats?.fechaVacaciones ?? [];
