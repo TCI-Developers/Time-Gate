@@ -47,5 +47,9 @@
 		<true/>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>Necesitamos tu ubicación para registrar tu asistencia en el lugar de trabajo.</string>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<string>Tu ubicación es necesaria para validar tu presencia en la oficina.</string>
 	</dict>
 </plist>

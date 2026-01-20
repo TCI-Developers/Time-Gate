@@ -42,7 +42,13 @@ class HomeProvider with ChangeNotifier {
     notifyListeners();
 
     final location = await _locationService.getLocation();
-    final response = await _service.checkIn(location: location!);
+
+    if (location == null) {
+      errorMessage = 'No se pudo obtener la ubicación. Verifica tus permisos y el GPS.';
+      return false;
+    }
+
+    final response = await _service.checkIn(location: location);
 
     if(response['status'] == 'error'){
         errorMessage = response['message'];
@@ -72,7 +78,13 @@ class HomeProvider with ChangeNotifier {
       notifyListeners();
 
       final location = await _locationService.getLocation();
-      final response = await _service.checkOut(location: location!);
+
+      if (location == null) {
+        errorMessage = 'No se pudo obtener la ubicación. Verifica tus permisos y el GPS.';
+        return false;
+      }
+      
+      final response = await _service.checkOut(location: location);
 
       if(response['status'] == 'error'){
         errorMessage = response['message'];
