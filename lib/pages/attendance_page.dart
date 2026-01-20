@@ -22,23 +22,22 @@ class _AttendancePageState extends State<AttendancePage> {
 
   int tabIndex = 0;
   DateTime _currentFocusedDate = DateTime.now();
-  
-  @override
-  void initState() {
-    super.initState();
-    // 1. Disparamos la carga inicial al entrar a la página
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final tabIndexPrincipal = context.read<TabbarProvider>().selectedMEnuOption;
-      final attendanceProv = context.read<AttendanceProvider>();
 
-      // Verificamos condiciones para la carga inicial
-      if (tabIndexPrincipal == 1 && 
-          attendanceProv.entries.isEmpty && 
-          !attendanceProv.isLoading) {
-        _fetchAttendance();
-      }
-    });
-  }
+  @override
+void initState() {
+  super.initState();
+  
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    final tabProvider = context.read<TabbarProvider>();
+    final attendanceProv = context.read<AttendanceProvider>();
+    print('entre');
+    if (tabProvider.selectedMEnuOption == 1 && 
+        attendanceProv.entries.isEmpty && 
+        !attendanceProv.isLoading) {
+      _fetchAttendance();
+    }
+  });
+}
   
 
   void _fetchAttendance() {

@@ -15,7 +15,7 @@ class AttendanceWorkpermitsSubpage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final titleOsw24Bold500Secondary = Theme.of(context).textTheme.titleOsw24Bold500Secondary;
-    // print('stats desde la verga perro secrum $stats');
+    
     return Column(
       children: [
         Container(

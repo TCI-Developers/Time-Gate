@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:time_gate/providers/attendance_provider.dart';
+import 'package:time_gate/providers/profile_provider.dart';
 import 'package:time_gate/providers/tabbar_provider.dart';
 import 'package:time_gate/themes/app_theme.dart';
 
@@ -35,7 +37,20 @@ class CustomNavigatorbar extends StatelessWidget {
             label: 'Asistencia',
             index: 1,
             selectedIndex: currentIndex,
-            onTap: () => uiProvider.selectedMEnuOption = 1,
+            onTap: () {
+              // 1. Cambiamos de pestaña
+              uiProvider.selectedMEnuOption = 1;
+
+              // 2. Disparamos la carga de datos solo si es necesario
+              final attendanceProv = context.read<AttendanceProvider>();
+              if (attendanceProv.entries.isEmpty && !attendanceProv.isLoading) {
+                attendanceProv.loadAttendance(
+                  type: 'asistencias',
+                  month: DateTime.now().month,
+                  year: DateTime.now().year,
+                );
+              }
+            },
           ),
           _CustomNavButton(
             icon: CupertinoIcons.list_bullet,
@@ -49,7 +64,13 @@ class CustomNavigatorbar extends StatelessWidget {
             label: 'Perfil',
             index: 3,
             selectedIndex: currentIndex,
-            onTap: () => uiProvider.selectedMEnuOption = 3,
+            onTap: (){
+              uiProvider.selectedMEnuOption = 3;
+              final profileProv = context.read<ProfileProvider>();
+              if (!profileProv.isLoading) {
+                profileProv.loadProfile();
+              }
+            },
           ),
         ],
       ),

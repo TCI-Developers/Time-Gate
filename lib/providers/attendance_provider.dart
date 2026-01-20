@@ -30,11 +30,9 @@ class AttendanceProvider with ChangeNotifier {
         year: year
       );
 
-      
-      
       stats = result.stats;
       entries = result.data;      
-      // print(entries);
+      print(entries);
     } catch (e) {
       errorMessage = e is Exception 
       ? e.toString().replaceAll('Exception: ', '') 

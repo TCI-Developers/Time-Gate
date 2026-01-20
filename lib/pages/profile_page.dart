@@ -23,8 +23,7 @@ class _ProfilePageState extends State<ProfilePage> {
       final tabbarProv = context.read<TabbarProvider>();
       final profileProv = context.read<ProfileProvider>();
 
-      // 1. Solo carga si el índice es 3 (Perfil) y no hay datos previos
-      if (tabbarProv.selectedMEnuOption == 3 && profileProv.profile == null) {
+      if (tabbarProv.selectedMEnuOption == 3 && profileProv.profile == null && !profileProv.isLoading) {
         profileProv.loadProfile();
       }
     });
@@ -32,14 +31,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final tabIndexPrincipal = context.watch<TabbarProvider>().selectedMEnuOption;
-    
-    final profileProv = context.read<ProfileProvider>();
-
-    if (tabIndexPrincipal == 3 && profileProv.profile == null && !profileProv.isLoading) {
-      Future.microtask(() => profileProv.loadProfile());
-    }
-
+   
     final titleOsw28Bold500Secondary =
         Theme.of(context).textTheme.titleOsw28Bold500Secondary;
     final titleOsw24Bold500Primary =

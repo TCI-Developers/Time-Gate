@@ -17,7 +17,7 @@ class ApiClient {
   ApiClient._internal() {
     _dio = Dio(
       BaseOptions(
-        baseUrl: 'https://b15b2704ea86.ngrok-free.app/api',
+        baseUrl: 'https://1bfa8834e940.ngrok-free.app/api',
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
         headers: {
@@ -35,7 +35,6 @@ class ApiClient {
             final ctx = navigatorKey.currentContext;
             
             if (ctx != null) {
-              // No limpiamos aquí, dejamos que el logout lo haga todo
               await showDialog(
                 context: ctx,
                 barrierDismissible: false,
@@ -46,8 +45,6 @@ class ApiClient {
                     TextButton(
                       onPressed: () async {
                         Navigator.of(ctx).pop();
-                        
-                        // IMPORTANTE: Pasamos el 'ctx' para que limpie los providers
                         await ctx.read<AuthProvider>().logout(ctx); 
                       },
                       child: const Text('Aceptar'),
