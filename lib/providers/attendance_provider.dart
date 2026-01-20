@@ -9,6 +9,7 @@ class AttendanceProvider with ChangeNotifier {
 
   bool isLoading = false;
   String? errorMessage;
+  String? successMessage;
 
   AttendanceStats? stats;
   List<AttendanceEntry> entries = [];
@@ -32,7 +33,6 @@ class AttendanceProvider with ChangeNotifier {
 
       stats = result.stats;
       entries = result.data;      
-      print(entries);
     } catch (e) {
       errorMessage = e is Exception 
       ? e.toString().replaceAll('Exception: ', '') 
@@ -42,6 +42,40 @@ class AttendanceProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<bool> sendVacationRequest({
+      required DateTime startDate, 
+      required DateTime endDate
+    }) async {
+      try {
+        isLoading = true;
+        errorMessage = null;
+        successMessage = null;
+        notifyListeners();
+
+        final response = await _service.requestVacation(
+          start: "${startDate.year}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}",
+          end: "${endDate.year}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}",
+        );
+
+        if (response['status'] == 'error') {
+          errorMessage = response['message'];
+          return false;
+        }
+
+        successMessage = response['message'];
+        // No recargamos datos aquí porque vamos a cerrar la página
+        return true;
+      } catch (e) {
+        errorMessage = e is Exception 
+          ? e.toString().replaceAll('Exception: ', '') 
+          : 'Error al conectar con el servidor';
+        return false;
+      } finally {
+        isLoading = false;
+        notifyListeners();
+      }
+    }
 
   void clear() {
     stats = null;

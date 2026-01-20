@@ -30,7 +30,6 @@ void initState() {
   WidgetsBinding.instance.addPostFrameCallback((_) {
     final tabProvider = context.read<TabbarProvider>();
     final attendanceProv = context.read<AttendanceProvider>();
-    print('entre');
     if (tabProvider.selectedMEnuOption == 1 && 
         attendanceProv.entries.isEmpty && 
         !attendanceProv.isLoading) {

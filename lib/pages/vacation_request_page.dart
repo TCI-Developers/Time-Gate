@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:time_gate/core/models/attendance_stats.model.dart';
+import 'package:time_gate/providers/attendance_provider.dart';
 import 'package:time_gate/themes/app_theme.dart';
 import 'package:time_gate/themes/custom_styles.dart';
 import 'package:time_gate/utils/responsive_utils.dart';
@@ -16,32 +19,36 @@ class _VacationRequestPageState extends State<VacationRequestPage> {
 
   DateTime? _startDate;
   DateTime? _endDate;
+  DateTime _focusedDay = DateTime.now(); 
   final DateFormat _dateFormat = DateFormat('dd/MM/yyyy');
 
-  final List<DateTime> faltasAMostrar = [
-    DateTime(2025, 11, 15), 
-    DateTime(2025, 11, 22)
-  ];
+   static const List<DateTime> faltasAMostrar = [];
+   static const List<DateTime> retardosAMostrar = [];
+   static const List<DateTime> asistenciasAMostrar = [];
 
-  final List<DateTime> retardosAMostrar = [
-    DateTime(2025, 11, 16), 
-    DateTime(2025, 11, 23)
-  ];
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchAttendance();
+    });
+  }
 
-  final List<DateTime> asistenciasAMostrar = [
-    DateTime(2025, 11, 17), 
-    DateTime(2025, 11, 24)
-  ];
+  void _fetchAttendance() {
+    final attendanceProv = context.read<AttendanceProvider>();
+    if (!mounted || attendanceProv.isLoading) return;
 
-  final DateTime? inicioVacaciones = DateTime(2025, 11, 1);
+    attendanceProv.loadAttendance(
+      type: 'vacaciones', 
+      month: _focusedDay.month,
+      year: _focusedDay.year,
+    );
 
-  final DateTime? finVacaciones = DateTime(2025, 11, 10);
-
-
+  }
+  
   Future<void> _selectDate(BuildContext context, bool isStart) async {
     final DateTime now = DateTime.now();
 
-    // límites dinámicos
     final DateTime firstDate =
         isStart ? DateTime(now.year - 1) : (_startDate ?? DateTime(now.year - 1));
     final DateTime lastDate =
@@ -49,9 +56,7 @@ class _VacationRequestPageState extends State<VacationRequestPage> {
 
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: isStart
-          ? (_startDate ?? now)
-          : (_endDate ?? _startDate ?? now),
+      initialDate: isStart ? (_startDate ?? now) : (_endDate ?? _startDate ?? now),
       firstDate: firstDate,
       lastDate: lastDate,
     );
@@ -60,19 +65,79 @@ class _VacationRequestPageState extends State<VacationRequestPage> {
       setState(() {
         if (isStart) {
           _startDate = picked;
-          // Si la fecha final es anterior, la borramos
+          _focusedDay = picked;
           if (_endDate != null && _endDate!.isBefore(picked)) {
             _endDate = null;
           }
         } else {
           _endDate = picked;
+          _focusedDay = picked;
         }
       });
     }
   }
 
+Future<void> _onSend() async {
+  if (_startDate == null || _endDate == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Por favor, selecciona el rango completo')),
+    );
+    return;
+  }
+
+  final bool? confirm = await showDialog<bool>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: const Text('Confirmar solicitud'),
+      content: const Text('¿Estás seguro de que quieres solicitar estas fechas?'),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: const Text('Cancelar')),
+        TextButton(onPressed: () => Navigator.pop(dialogContext, true), child: const Text('Sí, solicitar')),
+      ],
+    ),
+  );
+
+  if (!mounted || confirm != true) return;
+
+  final provider = context.read<AttendanceProvider>();
+  final navigator = Navigator.of(context); 
+
+  final bool ok = await provider.sendVacationRequest(
+    startDate: _startDate!,
+    endDate: _endDate!,
+  );
+
+  if (!mounted) return;
+
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (dialogContext) => AlertDialog(
+      title: Text(ok ? 'Éxito' : 'Error'),
+      content: Text(ok ? (provider.successMessage ?? 'Enviado') : (provider.errorMessage ?? 'Error')),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(dialogContext);
+            if (ok) {
+              navigator.pop(); 
+            }
+          },
+          child: const Text('Aceptar'),
+        ),
+      ],
+    ),
+  );
+}
+
   @override
   Widget build(BuildContext context) {
+
+    final isLoading = context.select<AttendanceProvider, bool>((p) => p.isLoading);
+    final stats = context.select<AttendanceProvider, AttendanceStats?>((p) => p.stats);
+    
+    final vacacionesYaAprobadas = stats?.fechaVacaciones ?? [];
+
     final double maxContainerWidth = getMaxContentWidth(context);
     final textOsw14bold500Primary = Theme.of(context).textTheme.textOsw14bold500Primary;
 
@@ -142,36 +207,41 @@ class _VacationRequestPageState extends State<VacationRequestPage> {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  // ReusableCalendar(
-                  //   faltas: faltasAMostrar,
-                  //   retardos: retardosAMostrar,
-                  //   asistencias: asistenciasAMostrar,
-                  //   rangeStart: inicioVacaciones,
-                  //   rangeEnd: finVacaciones,
-                  //   initialFocusedDay: DateTime(2025, 10, 12),
-                  // ),
+                  ReusableCalendar(
+                    key: ValueKey('vac-cal-${_focusedDay.month}-${_startDate != null}'),
+                    faltas: faltasAMostrar,
+                    retardos: retardosAMostrar,
+                    asistencias: asistenciasAMostrar,
+                    rangeStart: _startDate,
+                    rangeEnd: _endDate,
+                    vacacionesRangos: vacacionesYaAprobadas,
+                    initialFocusedDay: _focusedDay,
+                    onPageChanged: (newDate) {
+                      setState(() => _focusedDay = newDate);
+                      _fetchAttendance();
+                    },
+                  ),
                   const SizedBox(height: 80),
                   Row(
                     children: [
                       Expanded(
                         child: ActionButton(
-                            outlinedButton: false, 
-                            title: 'Mandar', 
-                            dateFormat: _dateFormat,
-                            startDate: _startDate, 
-                            endDate: _endDate,
-                          )
-                        ),
-                      SizedBox(width: 15,),
+                          outlinedButton: false, 
+                          title: isLoading ? 'Enviando...' : 'Mandar', 
+                          onTap: isLoading ? null : _onSend,// <--- Aquí pasas la lógica
+                        )
+                      ),
+                      const SizedBox(width: 15),
                       Expanded(
                         child: ActionButton(
-                            outlinedButton: true, 
-                            title: 'Cancelar',
-                          )
-                        ),
+                          outlinedButton: true, 
+                          title: 'Cancelar',
+                          onTap: () => Navigator.pop(context), // <--- El botón de cancelar solo hace pop
+                        )
+                      ),
                     ],
                   )
-                ],
+                                  ],
               ),
             ),
           ),

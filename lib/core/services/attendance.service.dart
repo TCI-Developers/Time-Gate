@@ -11,19 +11,16 @@ class AttendanceService {
     List<AttendanceEntry> data,
   })> getAttendanceReport({
     required String type,
-    int? month,  // Añadimos mes opcional
-    int? year,   // Añadimos año opcional
+    int? month, 
+    int? year,   
   }) async {
     try {
-      // Enviamos el type y las fechas en el body
       final response = await apiClient.post('/monthly-summary', {
         'type': type,
         'month': month,
         'year': year,
       });
 
-      
-      
       if (response.data['status'] != 'ok') {
         throw Exception('Error al obtener los datos de asistencia');
       }
@@ -42,6 +39,27 @@ class AttendanceService {
     } on DioException catch (e) {
       final msg = e.response?.data?['message'] ?? 'Error de conexión con el servidor';
       throw Exception(msg);
+    }
+  }
+
+  Future<Map<String, dynamic>> requestVacation({
+    required String start,
+    required String end,
+  }) async {
+    try {
+    
+      final response = await apiClient.post('/request-vacation', {
+        'inicio': start,
+        'fin': end,
+      });
+
+      return response.data;
+      
+    } on DioException catch (e) {
+      final msg = e.response?.data?['message'] ?? 'Error al procesar la solicitud';
+      throw Exception(msg);
+    } catch (e) {
+      throw Exception('Error inesperado: $e');
     }
   }
 }

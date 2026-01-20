@@ -12,40 +12,42 @@ class ActionButton extends StatelessWidget {
   final DateTime? endDate;
   final DateFormat? dateFormat;
   final TimeOfDay? selectedTime;
+  final VoidCallback? onTap;
   
   const ActionButton({
-    super.key, required this.outlinedButton, required this.title, this.startDate, this.endDate,  this.dateFormat, this.selectedTime,
+    super.key, required this.outlinedButton, required this.title, this.startDate, this.endDate,  this.dateFormat, this.selectedTime, this.onTap,
   });
   @override
   Widget build(BuildContext context) {
     final textJt16bold700Secondary = Theme.of(context).textTheme.textJt16bold700Secondary;
     final fontSizedGrow = getResponsiveScaleFactor(context);
     return GestureDetector(
-      onTap: (){
-        if(!outlinedButton){
-          if (startDate != null && endDate != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  'Solicitud de vacaciones del ${dateFormat!.format(startDate!)} al ${dateFormat!.format(endDate!)}',
-                ),
-              ),
-            );
-          }else if(startDate != null && selectedTime != null){
-            ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Solicitud de Permisos ${dateFormat!.format(startDate!)} hora: ${selectedTime!.format(context)}',
-                  ),
-                ),
-              );
+      // onTap: (){
+      //   if(!outlinedButton){
+      //     if (startDate != null && endDate != null) {
+      //       ScaffoldMessenger.of(context).showSnackBar(
+      //         SnackBar(
+      //           content: Text(
+      //             'Solicitud de vacaciones del ${dateFormat!.format(startDate!)} al ${dateFormat!.format(endDate!)}',
+      //           ),
+      //         ),
+      //       );
+      //     }else if(startDate != null && selectedTime != null){
+      //       ScaffoldMessenger.of(context).showSnackBar(
+      //           SnackBar(
+      //             content: Text(
+      //               'Solicitud de Permisos ${dateFormat!.format(startDate!)} hora: ${selectedTime!.format(context)}',
+      //             ),
+      //           ),
+      //         );
           
-          }
-        }else{
-          Navigator.of(context).pop();
-        }
+      //     }
+      //   }else{
+      //     Navigator.of(context).pop();
+      //   }
 
-      },
+      // },
+      onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
