@@ -35,7 +35,7 @@ class AttendanceAttendanceSubage extends StatelessWidget {
                     AttendanceCard(
                       color: Colors.orange, type: 'Vacaciones', 
                       maxProgress: stats?.totalVacaciones ?? 1, 
-                      currentProgress: stats?.vacacionesTomadas ?? 0.0, 
+                      currentProgress: stats?.vacacionesTomadas ?? 0, 
                     ), 
                   ],
                 ),

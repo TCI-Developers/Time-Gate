@@ -64,6 +64,15 @@ class AttendanceStats {
       totalAsistencias: json['total_asistencias']?.toDouble(),
       horasPermisos: json['horas_permisos'],
       horasExtra: json['horas_extra'],
+      totalAusencias: json['total_ausencias']?.toDouble(),
+      retardosPermitidos: json['retardos_permitidos']?.toDouble(),
+      permisosPermitidos: json['permisos_permitidos']?.toDouble(),
+      totalVacaciones: json['total_vacaciones']?.toDouble(),
+      diasExtra: json['dias_extra']?.toDouble(),
+      ausenciasPermitidas: json['ausencias_permitidas']?.toDouble(),
+      fechaAsistencia: json['fecha_asistencias'] != null 
+          ? List<String>.from(json['fecha_asistencias']) 
+          : null,
       fechaVacaciones: json['fecha_vacaciones'] != null 
           ? (json['fecha_vacaciones'] as List)
               .map((v) => VacacionRange.fromJson(v))
@@ -77,15 +86,6 @@ class AttendanceStats {
           : null,
       fechaAusencias: json['fecha_ausencias'] != null 
           ? List<String>.from(json['fecha_ausencias']) 
-          : null,
-      totalAusencias: json['total_ausencias']?.toDouble(),
-      retardosPermitidos: json['retardos_permitidos']?.toDouble(),
-      permisosPermitidos: json['permisos_permitidos']?.toDouble(),
-      totalVacaciones: json['total_vacaciones']?.toDouble(),
-      diasExtra: json['dias_extra']?.toDouble(),
-      ausenciasPermitidas: json['ausencias_permitidas']?.toDouble(),
-      fechaAsistencia: json['fecha_asistencias'] != null 
-          ? List<String>.from(json['fecha_asistencias']) 
           : null,
       
     );
