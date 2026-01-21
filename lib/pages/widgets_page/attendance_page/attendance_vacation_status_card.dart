@@ -61,7 +61,7 @@ class AttendanceVacationStatusCard extends StatelessWidget {
                 child: Text(
                   type == "vacaciones" 
                   ? '$diasTomados Días tomados de vacaciones de $totalDias dias dispinibles'
-                  : '$diasTomados Permiso solicitado', 
+                  : '1 Permiso solicitado', 
                   style: textOsw11boldPrimary.copyWith(fontSize: 11*fontSizedGrow),
                 )
               ),

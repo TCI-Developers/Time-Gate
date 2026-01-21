@@ -62,4 +62,26 @@ class AttendanceService {
       throw Exception('Error inesperado: $e');
     }
   }
+
+  Future<Map<String, dynamic>> requestPermit({
+    required String date,
+    required String time,
+  }) async {
+    try {
+      final response = await apiClient.post('/permission', {
+        'day': date,
+        'time': time,
+      });
+
+      // Retornamos el body de la respuesta (response.data)
+      // que contiene el 'status' y el 'message'
+      return response.data;
+      
+    } on DioException catch (e) {
+      final msg = e.response?.data?['message'] ?? 'Error al procesar la solicitud de permiso';
+      throw Exception(msg);
+    } catch (e) {
+      throw Exception('Error inesperado: $e');
+    }
+  }
 }

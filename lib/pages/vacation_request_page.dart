@@ -121,6 +121,7 @@ Future<void> _onSend() async {
             Navigator.pop(dialogContext);
             if (ok) {
               navigator.pop(); 
+              _fetchAttendance();
             }
           },
           child: const Text('Aceptar'),

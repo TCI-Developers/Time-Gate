@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:time_gate/core/models/attendance_stats.model.dart';
+import 'package:time_gate/providers/attendance_provider.dart';
 import 'package:time_gate/themes/app_theme.dart';
 import 'package:time_gate/themes/custom_styles.dart';
 import 'package:time_gate/utils/responsive_utils.dart';
 import 'package:time_gate/widgets/widgets.dart';
-
 
 class PermitApplicationPage extends StatefulWidget {
   const PermitApplicationPage({super.key});
@@ -14,37 +16,32 @@ class PermitApplicationPage extends StatefulWidget {
 }
 
 class _PermitApplicationPageState extends State<PermitApplicationPage> {
-
-  // Variables modificadas: Solo _startDate y se añade _selectedTime
   DateTime? _startDate;
-  TimeOfDay? _selectedTime; // Nuevo: para guardar la hora seleccionada
-
-  // Eliminamos _endDate y la lógica de rango de fechas de aquí.
+  TimeOfDay? _selectedTime;
+  DateTime _focusedDay = DateTime.now();
   final DateFormat _dateFormat = DateFormat('dd/MM/yyyy');
 
-  final List<DateTime> faltasAMostrar = [
-    DateTime(2025, 11, 15), 
-    DateTime(2025, 11, 22)
-  ];
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchAttendance();
+    });
+  }
 
-  final List<DateTime> retardosAMostrar = [
-    DateTime(2025, 11, 16), 
-    DateTime(2025, 11, 23)
-  ];
+  void _fetchAttendance() {
+    final attendanceProv = context.read<AttendanceProvider>();
+    if (!mounted || attendanceProv.isLoading) return;
 
-  final List<DateTime> asistenciasAMostrar = [
-    DateTime(2025, 11, 17), 
-    DateTime(2025, 11, 24)
-  ];
+    attendanceProv.loadAttendance(
+      type: 'permisos',
+      month: _focusedDay.month,
+      year: _focusedDay.year,
+    );
+  }
 
-  final DateTime? inicioVacaciones = DateTime(2025, 11, 1);
-
-  final DateTime? finVacaciones = DateTime(2025, 11, 10);
-
-  // Función para seleccionar la FECHA (simplificada para no tener rango)
   Future<void> _selectDate(BuildContext context) async {
     final DateTime now = DateTime.now();
-
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _startDate ?? now,
@@ -55,16 +52,14 @@ class _PermitApplicationPageState extends State<PermitApplicationPage> {
     if (picked != null) {
       setState(() {
         _startDate = picked;
-        // Opcional: Establece la hora actual si no hay ninguna seleccionada
-        _selectedTime ??= TimeOfDay.fromDateTime(now); 
+        _focusedDay = picked;
+        _selectedTime ??= TimeOfDay.fromDateTime(now);
       });
     }
   }
 
-  // 🆕 Función para seleccionar la HORA
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay now = TimeOfDay.now();
-
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
       initialTime: _selectedTime ?? now,
@@ -73,18 +68,85 @@ class _PermitApplicationPageState extends State<PermitApplicationPage> {
     if (pickedTime != null) {
       setState(() {
         _selectedTime = pickedTime;
-        // Opcional: Establece la fecha de hoy si no hay ninguna seleccionada
         _startDate ??= DateTime.now();
       });
     }
   }
 
+  Future<void> _onSend() async {
+    if (_startDate == null || _selectedTime == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor, selecciona fecha y hora')),
+      );
+      return;
+    }
+
+    final bool? confirm = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Confirmar permiso'),
+        content: const Text('¿Deseas enviar esta solicitud de permiso?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: const Text('Cancelar')),
+          TextButton(onPressed: () => Navigator.pop(dialogContext, true), child: const Text('Confirmar')),
+        ],
+      ),
+    );
+
+    if (!mounted || confirm != true) return;
+
+    final provider = context.read<AttendanceProvider>();
+    final navigator = Navigator.of(context);
+
+    final DateTime fullDateTime = DateTime(
+      _startDate!.year,
+      _startDate!.month,
+      _startDate!.day,
+      _selectedTime!.hour,
+      _selectedTime!.minute,
+    );
+
+    final bool ok = await provider.sendPermitRequest(
+      date: fullDateTime,
+    );
+
+    if (!mounted) return;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(ok ? 'Éxito' : 'Error'),
+        content: Text(ok ? (provider.successMessage ?? 'Solicitud enviada') : (provider.errorMessage ?? 'Error al enviar')),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              if (ok){
+                _fetchAttendance();
+                navigator.pop();
+              }
+            },
+            child: const Text('Aceptar'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final double maxContainerWidth = getMaxContentWidth(context);
+    final isLoading = context.select<AttendanceProvider, bool>((p) => p.isLoading);
+    final stats = context.select<AttendanceProvider, AttendanceStats?>((p) => p.stats);
 
+    final List<DateTime> fechasYaSolicitadas = (stats?.fechaPermisos ?? [])
+        .map((fechaStr) => DateTime.parse(fechaStr))
+        .toList();
+
+    final fontSizedGrow = getResponsiveScaleFactor(context);
+    final maxContainerWidth = getMaxContentWidth(context);
     final textOsw14bold500Primary = Theme.of(context).textTheme.textOsw14bold500Primary;
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -100,39 +162,32 @@ class _PermitApplicationPageState extends State<PermitApplicationPage> {
                   const SizedBox(height: 30),
                   Row(
                     children: [
-                      // SELECTOR DE FECHA (DÍA)
                       Expanded(
                         child: GestureDetector(
-                          //Se llama a la función de selección de fecha sin parámetros (versión única)
-                          onTap: () => _selectDate(context), 
+                          onTap: () => _selectDate(context),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Día', style: textOsw14bold500Primary),
+                              Text('Día', style: textOsw14bold500Primary.copyWith(fontSize: 14 * fontSizedGrow)),
                               const SizedBox(height: 8),
                               _buildDateBox(
-                                text: _startDate != null
-                                    ? _dateFormat.format(_startDate!)
-                                    : 'Seleccionar día',
+                                text: _startDate != null ? _dateFormat.format(_startDate!) : 'Seleccionar día',
                               ),
                             ],
                           ),
                         ),
                       ),
                       const SizedBox(width: 16),
-                      //SELECTOR DE HORA
                       Expanded(
                         child: GestureDetector(
-                          onTap: () => _selectTime(context), // Llama a la nueva función
+                          onTap: () => _selectTime(context),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Hora', style: textOsw14bold500Primary),
+                              Text('Hora', style: textOsw14bold500Primary.copyWith(fontSize: 14 * fontSizedGrow)),
                               const SizedBox(height: 8),
                               _buildDateBox(
-                                text: _selectedTime != null
-                                    ? _selectedTime!.format(context) // Muestra la hora formateada
-                                    : 'Seleccionar hora',
+                                text: _selectedTime != null ? _selectedTime!.format(context) : 'Seleccionar hora',
                               ),
                             ],
                           ),
@@ -141,32 +196,37 @@ class _PermitApplicationPageState extends State<PermitApplicationPage> {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  // ReusableCalendar(
-                  //   faltas: faltasAMostrar,
-                  //   retardos: retardosAMostrar,
-                  //   asistencias: asistenciasAMostrar,
-                  //   rangeStart: inicioVacaciones,
-                  //   rangeEnd: finVacaciones,
-                  //   initialFocusedDay: DateTime(2025, 10, 12),
-                  // ),
+                  ReusableCalendar(
+                    key: ValueKey('perm-cal-${_focusedDay.month}-${_startDate != null}'),
+                    faltas: const [], 
+                    retardos: const [],
+                    asistencias: fechasYaSolicitadas,
+                    rangeStart: _startDate,
+                    rangeEnd: _startDate,
+                    vacacionesRangos: stats?.fechaVacaciones ?? [],
+                    initialFocusedDay: _focusedDay,
+                    onPageChanged: (newDate) {
+                      setState(() => _focusedDay = newDate);
+                      _fetchAttendance();
+                    },
+                  ),
                   const SizedBox(height: 80),
                   Row(
                     children: [
                       Expanded(
                         child: ActionButton(
-                            outlinedButton: false, 
-                            title: 'Mandar', 
-                            dateFormat: _dateFormat,
-                            startDate: _startDate, 
-                            selectedTime: _selectedTime,
-                          )
+                          outlinedButton: false,
+                          title: isLoading ? 'Enviando...' : 'Mandar',
+                          onTap: isLoading ? null : _onSend,
                         ),
-                      SizedBox(width: 15,),
+                      ),
+                      const SizedBox(width: 15),
                       Expanded(
                         child: ActionButton(
-                            outlinedButton: true, 
-                            title: 'Cancelar',
-                        )
+                          outlinedButton: true,
+                          title: 'Cancelar',
+                          onTap: () => Navigator.pop(context),
+                        ),
                       ),
                     ],
                   )
@@ -179,26 +239,29 @@ class _PermitApplicationPageState extends State<PermitApplicationPage> {
     );
   }
 
-// El widget _buildDateBox se mantiene sin cambios, es reutilizable para ambos
-Widget _buildDateBox({required String text, bool disabled = false}) {
+  Widget _buildDateBox({required String text, bool disabled = false}) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
       decoration: BoxDecoration(
-        
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
+        boxShadow: const [
+          BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 4)),
         ],
         borderRadius: BorderRadius.circular(10),
-        color: AppTheme.white,
+        color: Colors.white,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(text, style: TextStyle(fontSize: 13, color: disabled ? AppTheme.grey : AppTheme.secondary)),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 13,
+                color: disabled ? Colors.grey : AppTheme.secondary,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
           const Icon(Icons.keyboard_arrow_down, size: 30, color: AppTheme.secondary),
         ],
       ),

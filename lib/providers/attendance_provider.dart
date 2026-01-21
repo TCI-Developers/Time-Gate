@@ -62,9 +62,7 @@ class AttendanceProvider with ChangeNotifier {
           errorMessage = response['message'];
           return false;
         }
-
         successMessage = response['message'];
-        // No recargamos datos aquí porque vamos a cerrar la página
         return true;
       } catch (e) {
         errorMessage = e is Exception 
@@ -76,6 +74,41 @@ class AttendanceProvider with ChangeNotifier {
         notifyListeners();
       }
     }
+
+    Future<bool> sendPermitRequest({
+    required DateTime date,
+  }) async {
+    try {
+      isLoading = true;
+      errorMessage = null;
+      successMessage = null;
+      notifyListeners();
+
+      final String formattedDate = "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+      final String formattedTime = "${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
+
+      final response = await _service.requestPermit(
+        date: formattedDate,
+        time: formattedTime,
+      );
+
+      if (response['status'] == 'error') {
+        errorMessage = response['message'];
+        return false;
+      }
+
+      successMessage = response['message'];
+      return true;
+    } catch (e) {
+      errorMessage = e is Exception 
+        ? e.toString().replaceAll('Exception: ', '') 
+        : 'Error al conectar con el servidor';
+      return false;
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
 
   void clear() {
     stats = null;

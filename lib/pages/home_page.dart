@@ -243,6 +243,7 @@ class _HomePageState extends State<HomePage> {
                                     day: day.date.split('-').last,
                                     indicatorColor: 
                                       (day.type ?? "").toLowerCase() =="asistencia" ? AppTheme.green
+                                      : (day.type ?? "").toLowerCase() =="permiso" ? AppTheme.green
                                       : (day.type ?? "").toLowerCase() =="ausencia" ? AppTheme.red
                                       : (day.type ?? "").toLowerCase() =="vacaciones" ? Colors.amberAccent
                                       : (day.type ?? "").toLowerCase() =="retardo" ? const Color.fromARGB(255, 151, 42, 34)
