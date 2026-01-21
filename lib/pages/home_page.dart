@@ -245,8 +245,8 @@ class _HomePageState extends State<HomePage> {
                                       (day.type ?? "").toLowerCase() =="asistencia" ? AppTheme.green
                                       : (day.type ?? "").toLowerCase() =="ausencia" ? AppTheme.red
                                       : (day.type ?? "").toLowerCase() =="vacaciones" ? Colors.amberAccent
-                                      : Colors.transparent
-                                      
+                                      : (day.type ?? "").toLowerCase() =="retardo" ? const Color.fromARGB(255, 151, 42, 34)
+                                      : Colors.transparent 
                                   );
                                 }).toList(),
                               )

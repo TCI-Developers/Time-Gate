@@ -95,8 +95,10 @@ class _DayOfWeekButton extends StatelessWidget {
                     ? Colors.lightGreen
                     : status == 'vacaciones' 
                         ? Colors.yellow
-                    : status == 'falta' 
+                    : status == 'ausencia'
                         ? AppTheme.red
+                    : status == 'retardo'    
+                        ? const Color.fromARGB(255, 151, 42, 34)
                         : Colors.transparent
                     ,
                     borderRadius: BorderRadius.circular(5)
