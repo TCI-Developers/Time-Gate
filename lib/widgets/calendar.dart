@@ -135,14 +135,6 @@ void _onPageChanged(DateTime newFocusedDay) {
       asistencias: safeAsistencias,
     );
 
-    // 3. ACTUALIZACIÓN: Pasar la lista de rangos al builder quitarrrrr
-    // final calendarBuilders = CustomCalendarBuilders(
-    //   vacaciones: widget.vacacionesRangos ?? [], // Cambiado aquí
-    //   faltas: safeFaltas,
-    //   retardos: safeRetardos,
-    //   asistencias: safeAsistencias,
-    // );
-
     final titleOsw24Bold500Secondary = Theme.of(context).textTheme.titleOsw24Bold500Secondary;
     final fontSizedGrow = getResponsiveScaleFactor(context);
     

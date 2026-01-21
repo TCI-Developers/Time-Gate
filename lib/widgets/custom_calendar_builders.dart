@@ -3,7 +3,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:time_gate/core/models/attendance_stats.model.dart';
 import '../utils/calendar_data.dart'; // Importa tus constantes
 import 'package:intl/intl.dart';
-// Esta clase auxiliar contendrá toda la lógica de renderizado visual.
+
 class CustomCalendarBuilders {
   final List<DateTime> faltas;
   final List<DateTime> retardos;
@@ -21,12 +21,10 @@ class CustomCalendarBuilders {
     required this.vacaciones,
   });
   
-  // Función auxiliar para verificar si un día tiene una marca
   bool _isMarkedDay(DateTime day, List<DateTime> marks) {
     return marks.any((markedDay) => isSameDay(day, markedDay));
   }
 
-  // Widget auxiliar para crear el punto de marca (pequeño círculo)
   Widget _buildMarker(Color color) {
     return Container(
       width: 6,
@@ -57,55 +55,11 @@ class CustomCalendarBuilders {
             ),
         );
     },
-  
-    // rangeStartBuilder: (context, day, focusedDay) {
-    //   final screenWidth = MediaQuery.of(context).size.width;
-    //   if (isSameDay(day, rangeStart)) {
-    //     return Container(
-    //       margin: EdgeInsets.symmetric(vertical: screenWidth > 450 ? 6 : 12),
-    //       decoration: const BoxDecoration(
-    //         color: kColorVacaciones,
-         
-    //         borderRadius: BorderRadius.horizontal(left: Radius.circular(100)),
-    //       ),
-    //       alignment: Alignment.center,
-    //       child: Text(
-    //         '${day.day}',
-    //         style: const TextStyle(color: Colors.black),
-    //       ),
-    //     );
-    //   }
-    //   return null;
-    // },
 
-    
-    // rangeEndBuilder: (context, day, focusedDay) {
-    //   final screenWidth = MediaQuery.of(context).size.width;
-      
-    //   if (isSameDay(day, rangeEnd)) {
-    //     return Container(
-         
-    //       margin: EdgeInsets.symmetric(vertical: screenWidth > 450 ? 6 : 12),
-    //       decoration: const BoxDecoration(
-
-    //         color: kColorVacaciones,
-            
-    //         borderRadius: BorderRadius.horizontal(right: Radius.circular(100)),
-    //       ),
-    //       alignment: Alignment.center,
-    //       child: Text(
-    //         '${day.day}',
-    //         style: const TextStyle(color: Colors.black),
-    //       ),
-    //     );
-    //   }
-    //   return null;
-    // },
     prioritizedBuilder: (context, day, focusedDay) {
       final screenWidth = MediaQuery.of(context).size.width;
       
       for (var rango in vacaciones) {
-        // Normalizamos fechas para comparar solo día/mes/año
         final d = DateTime(day.year, day.month, day.day);
         final s = DateTime(rango.inicio.year, rango.inicio.month, rango.inicio.day);
         final e = DateTime(rango.fin.year, rango.fin.month, rango.fin.day);
@@ -134,19 +88,56 @@ class CustomCalendarBuilders {
           );
         }
       }
-      return null; // Si no es rango de vacación, sigue a los demás builders
+      return null;
+    },
+    //borrar today builder en caso de no querer que aparezca en el mismo dia
+    todayBuilder: (context, day, focusedDay) {
+      
+      bool isDayInVacation = vacaciones.any((rango) {
+        final d = DateTime(day.year, day.month, day.day);
+        return (d.isAtSameMomentAs(rango.inicio) || d.isAfter(rango.inicio)) &&
+               (d.isAtSameMomentAs(rango.fin) || d.isBefore(rango.fin));
+      });
+      if (isDayInVacation) return null;
+
+      bool isFalta = _isMarkedDay(day, faltas);
+      bool isRetardo = _isMarkedDay(day, retardos);
+      bool isAsistencia = _isMarkedDay(day, asistencias);
+
+      if (isAsistencia) {
+        return Container(
+          margin: const EdgeInsets.all(4.0),
+          alignment: Alignment.center,
+          decoration: const BoxDecoration(color: kColorSeleccionado, shape: BoxShape.circle),
+          child: Text('${day.day}', style: const TextStyle(color: Colors.white)),
+        );
+      }
+
+      if (isRetardo) {
+        return Container(
+          margin: const EdgeInsets.all(4.0),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            border: Border.all(color: kColorBordeMarcado, width: 2), 
+            shape: BoxShape.circle,
+          ),
+          child: Text('${day.day}', style: const TextStyle(color: Colors.black)),
+        );
+      }
+
+      if (isFalta) {
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(alignment: Alignment.center, child: Text('${day.day}', style: const TextStyle(color: Colors.black))),
+            Positioned(bottom: 2, child: _buildMarker(kColorFalta)),
+          ],
+        );
+      }
+      return null;
     },
     
     defaultBuilder: (context, day, focusedDay) {
-      
-   
-      // bool isDayInVacationRange = (rangeStart != null && rangeEnd != null && 
-      //                            (day.isAfter(rangeStart!) || isSameDay(day, rangeStart!)) && 
-      //                            (day.isBefore(rangeEnd!) || isSameDay(day, rangeEnd!)));
-
-      // if (isDayInVacationRange) {
-      //     return null;
-      // }
 
       bool isDayInVacation = vacaciones.any((rango) {
         final d = DateTime(day.year, day.month, day.day);
@@ -155,8 +146,6 @@ class CustomCalendarBuilders {
       });
 
       if (isDayInVacation) return null;
-      
-      // 2. Definición de las marcas
       bool isFalta = _isMarkedDay(day, faltas);
       bool isRetardo = _isMarkedDay(day, retardos);
       bool isAsistencia = _isMarkedDay(day, asistencias);

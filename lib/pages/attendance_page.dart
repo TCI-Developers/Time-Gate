@@ -42,7 +42,7 @@ void initState() {
   void _fetchAttendance() {
     final attendanceProv = context.read<AttendanceProvider>();
     if (!mounted || attendanceProv.isLoading) return;
-    // 1. Determinamos el tipo según el tab seleccionado
+    
     String type = 'asistencias';
     if (tabIndex == 1) type = 'vacaciones';
     if (tabIndex == 2) type = 'permisos';
@@ -50,7 +50,6 @@ void initState() {
 
     attendanceProv.clear();
 
-    // 2. Llamamos al provider pasando los 3 datos: tipo, mes y año
     context.read<AttendanceProvider>().loadAttendance(
       type: type,
       month: _currentFocusedDate.month,
@@ -79,14 +78,12 @@ void initState() {
     final stats = attendanceProv.stats;
     final List<VacacionRange> vacacionesRangos = stats?.fechaVacaciones ?? [];
 
-    // print('stats desde $stats');
     final double maxContainerWidth = getMaxContentWidth(context);
     final titleOsw30Bold500Secondary = Theme.of(context).textTheme.titleOsw30Bold500Secondary;
     final fontSizedGrow = getResponsiveScaleFactor(context);
 
     final List<DateTime> asistenciasOriginales = _parseDates(stats?.fechaAsistencia ?? []);
     final List<DateTime> retardosList = _parseDates(stats?.fechaRetardo ?? []);
-
     final List<DateTime> asistenciasLimpias = asistenciasOriginales.where((asistencia) {
       return !retardosList.any((retardo) => 
         asistencia.year == retardo.year && 
@@ -131,8 +128,7 @@ void initState() {
                         rangeStart: inicioVacaciones,
                         rangeEnd: finVacaciones,
                         initialFocusedDay: _currentFocusedDate, // ⬅️ USAR LA VARIABLE
-                        
-                        // 🆕 CONECTAR EL CAMBIO DE MES
+                    
                         onPageChanged: (newDate) {
                           setState(() => _currentFocusedDate = newDate);
                           _fetchAttendance();
@@ -157,18 +153,18 @@ void initState() {
                           GestureDetector(
                             onTap: () {
                               setState(() {
-                                tabIndex = 1; // Primero actualizamos el índice
+                                tabIndex = 1;
                               });
-                              _fetchAttendance(); // Luego pedimos los datos con el índice nuevo
+                              _fetchAttendance();
                             },
                             child: AttendanceTag(text: 'Vacaciones', color: kColorVacaciones,index: 1, currentIndex: tabIndex,)
                           ),
                           GestureDetector(
                             onTap: () {
                               setState(() {
-                                tabIndex = 2; // Primero actualizamos el índice
+                                tabIndex = 2;
                               });
-                              _fetchAttendance(); // Luego pedimos los datos con el índice nuevo
+                              _fetchAttendance();
                             },
                             child: AttendanceTag(text: 'Permisos', color: kColorSeleccionado,index: 2, currentIndex: tabIndex,)
                           ),
