@@ -45,7 +45,7 @@ class CustomNavigatorbar extends StatelessWidget {
               final attendanceProv = context.read<AttendanceProvider>();
               if (attendanceProv.entries.isEmpty && !attendanceProv.isLoading) {
                 attendanceProv.loadAttendance(
-                  type: 'asistencias',
+                  type: 'asistencia',
                   month: DateTime.now().month,
                   year: DateTime.now().year,
                 );

@@ -23,7 +23,6 @@ class AttendanceStats {
   final double? ausenciasPermitidas;
   final List<String>? fechaAsistencia;
   
-
   AttendanceStats({
     this.retardosTomados,
     this.tiempoRetardo,
@@ -50,6 +49,7 @@ class AttendanceStats {
     this.fechaAsistencia
     
   });
+  
 
   factory AttendanceStats.fromJson(Map<String, dynamic> json) {
     return AttendanceStats(
@@ -78,8 +78,8 @@ class AttendanceStats {
               .map((v) => VacacionRange.fromJson(v))
               .toList()
           : null,
-      fechaRetardo: json['fecha_retardo'] != null 
-          ? List<String>.from(json['fecha_retardo']) 
+      fechaRetardo: json['fecha_retardos'] != null 
+          ? List<String>.from(json['fecha_retardos']) 
           : null,
       fechaPermisos: json['fecha_permisos'] != null 
           ? List<String>.from(json['fecha_permisos']) 

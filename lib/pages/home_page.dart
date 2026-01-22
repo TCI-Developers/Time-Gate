@@ -244,13 +244,14 @@ class _HomePageState extends State<HomePage> {
                                     indicatorColor: 
                                       (day.type ?? "").toLowerCase() =="asistencia" ? AppTheme.green
                                       : (day.type ?? "").toLowerCase() =="permiso" ? AppTheme.green
-                                      : (day.type ?? "").toLowerCase() =="ausencia" ? AppTheme.red
+                                      : (day.type ?? "").toLowerCase() =="ausencia" ? const Color.fromARGB(255, 203, 63, 53)
                                       : (day.type ?? "").toLowerCase() =="vacaciones" ? Colors.amberAccent
-                                      : (day.type ?? "").toLowerCase() =="retardo" ? const Color.fromARGB(255, 151, 42, 34)
+                                      : (day.type ?? "").toLowerCase() =="retardo" ? AppTheme.red
                                       : Colors.transparent 
                                   );
                                 }).toList(),
                               )
+                              
           
                             ],
                           ),

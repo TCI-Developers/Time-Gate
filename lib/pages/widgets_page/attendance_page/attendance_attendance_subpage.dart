@@ -22,20 +22,20 @@ class AttendanceAttendanceSubage extends StatelessWidget {
                   children: [
                     AttendanceCard( 
                       color: Colors.red, type: 'Retardos', 
-                      maxProgress: stats?.retardosPermitidos ?? 1, 
-                      currentProgress: stats?.retardosTomados ?? 0.0,
+                      maxProgress: (stats?.retardosPermitidos ?? 1).toDouble(), 
+                      currentProgress: (stats?.retardosTomados ?? 0).toDouble(),
                     ),
                     const SizedBox(height: 10,),
                     AttendanceCard(
                       color: kColorSeleccionado, type: 'Permisos', 
-                      maxProgress: stats?.permisosPermitidos ?? 1, 
-                      currentProgress: stats?.permisosTomados ?? 0.0,
+                      maxProgress: (stats?.permisosPermitidos ?? 1).toDouble(), 
+                      currentProgress: (stats?.permisosTomados ?? 0).toDouble(),
                     ),
                     const SizedBox(height: 10,),
                     AttendanceCard(
                       color: Colors.orange, type: 'Vacaciones', 
-                      maxProgress: stats?.totalVacaciones ?? 1, 
-                      currentProgress: stats?.vacacionesTomadas ?? 0, 
+                      maxProgress: (stats?.totalVacaciones ?? 1).toDouble(),
+                      currentProgress: (stats?.vacacionesTomadas ?? 0).toDouble(), 
                     ), 
                   ],
                 ),

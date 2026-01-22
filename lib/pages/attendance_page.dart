@@ -43,7 +43,7 @@ void initState() {
     final attendanceProv = context.read<AttendanceProvider>();
     if (!mounted || attendanceProv.isLoading) return;
     
-    String type = 'asistencias';
+    String type = 'asistencia';
     if (tabIndex == 1) type = 'vacaciones';
     if (tabIndex == 2) type = 'permisos';
     // if (tabIndex == 3) type = 'ausencias';
