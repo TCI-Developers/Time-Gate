@@ -41,11 +41,12 @@ class AuthProvider with ChangeNotifier {
   token = await TokenStorage.getToken();
   print(token);
   if (token == null) return false;
-
+  
   _authService.apiClient.setToken(token!);
-
-  final isValid = await _authService.checkSession();
-
+  print('mrto swui mrto');
+  // final isValid = await _authService.checkSession();
+  final isValid = await _authService.checkSession().timeout(const Duration(seconds: 8));
+  print('is validdddddddddddddddddd: $isValid');
   if (!isValid) {
     await logout();
     return false;
@@ -55,20 +56,10 @@ class AuthProvider with ChangeNotifier {
   return true;
   }
 
-  // Future<void> logout() async {
-  //   token = null;
-  //   await TokenStorage.deleteToken();
-  //   _authService.apiClient.clearToken();
-  //   notifyListeners();
 
-  //   navigatorKey.currentState?.pushNamedAndRemoveUntil(
-  //     'login',
-  //     (route) => false,
-  //   );
-  // }
   Future<void> logout([BuildContext? context]) async {
     if (context != null && context.mounted) {
-      clearAllProviders(context); // Tu utilidad de session_utils.dart
+      clearAllProviders(context); 
     }
     
     token = null;          

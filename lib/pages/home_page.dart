@@ -27,7 +27,6 @@ class _HomePageState extends State<HomePage> {
       final tabbarProv = context.read<TabbarProvider>();
       final homeProv = context.read<HomeProvider>();
 
-      // Solo cargamos si el índice es 0 y no hay datos cargados aún
       if (tabbarProv.selectedMEnuOption == 0 && homeProv.user == null) {
         homeProv.loadHome();
       }
