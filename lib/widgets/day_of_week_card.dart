@@ -3,6 +3,7 @@ import 'package:time_gate/themes/app_theme.dart';
 import 'package:time_gate/themes/custom_styles.dart';
 import 'package:time_gate/utils/responsive_utils.dart';
 
+
 class DayOfWeekCard extends StatelessWidget {
 
   final String day;
@@ -98,6 +99,8 @@ class _DayOfWeekButton extends StatelessWidget {
                         ? Colors.yellow
                     : status == 'ausencia'
                         ? const Color.fromARGB(255, 203, 63, 53)
+                    : status == 'descanso'
+                        ?  AppTheme.primary
                     : status == 'retardo'    
                         ? AppTheme.red
                         : Colors.transparent

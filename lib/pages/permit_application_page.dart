@@ -42,11 +42,23 @@ class _PermitApplicationPageState extends State<PermitApplicationPage> {
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime now = DateTime.now();
+
+    final DateTime today = DateTime(now.year, now.month, now.day);
+  
+    final DateTime firstDate = today;
+    
+    final DateTime lastDate = DateTime(now.year + 2);
+
+    DateTime initialDate = _startDate ?? today;
+    if (initialDate.isBefore(firstDate)) {
+      initialDate = firstDate;
+    }
+
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _startDate ?? now,
-      firstDate: DateTime(now.year - 1),
-      lastDate: DateTime(now.year + 2),
+      initialDate: initialDate,
+      firstDate: firstDate, 
+      lastDate: lastDate,
     );
 
     if (picked != null) {

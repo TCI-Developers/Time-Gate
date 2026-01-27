@@ -48,15 +48,20 @@ class _VacationRequestPageState extends State<VacationRequestPage> {
   
   Future<void> _selectDate(BuildContext context, bool isStart) async {
     final DateTime now = DateTime.now();
+    final DateTime today = DateTime(now.year, now.month, now.day);
 
-    final DateTime firstDate =
-        isStart ? DateTime(now.year - 1) : (_startDate ?? DateTime(now.year - 1));
-    final DateTime lastDate =
-        isStart ? (_endDate ?? DateTime(now.year + 2)) : DateTime(now.year + 2);
+    final DateTime firstDate = isStart ? today : (_startDate ?? today);
+    final DateTime lastDate = DateTime(now.year + 2);
+
+    DateTime initialDate = isStart ? (_startDate ?? today) : (_endDate ?? _startDate ?? today);
+
+    if (initialDate.isBefore(firstDate)) {
+      initialDate = firstDate;
+    }
 
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: isStart ? (_startDate ?? now) : (_endDate ?? _startDate ?? now),
+      initialDate: initialDate, 
       firstDate: firstDate,
       lastDate: lastDate,
     );

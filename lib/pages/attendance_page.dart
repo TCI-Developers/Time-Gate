@@ -127,7 +127,7 @@ void initState() {
                         vacacionesRangos: vacacionesRangos,
                         rangeStart: inicioVacaciones,
                         rangeEnd: finVacaciones,
-                        initialFocusedDay: _currentFocusedDate, // ⬅️ USAR LA VARIABLE
+                        initialFocusedDay: _currentFocusedDate, 
                     
                         onPageChanged: (newDate) {
                           setState(() => _currentFocusedDate = newDate);
@@ -144,9 +144,9 @@ void initState() {
                           GestureDetector(
                             onTap: () {
                               setState(() {
-                                tabIndex = 0; // Primero actualizamos el índice
+                                tabIndex = 0;
                               });
-                              _fetchAttendance(); // Luego pedimos los datos con el índice nuevo
+                              _fetchAttendance();
                             },
                             child: AttendanceTag(text: 'Asistencias', color: Color(0xFF7e9758),index: 0, currentIndex: tabIndex,)
                           ),
