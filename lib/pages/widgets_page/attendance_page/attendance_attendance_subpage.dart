@@ -75,7 +75,7 @@ class AttendanceAttendanceSubage extends StatelessWidget {
                 maxProgress: stats?.ausenciasPermitidas?.toDouble() ?? 1, 
                 currentProgress: stats?.totalAusencias ?? 1, 
                 text: 'horas de retraso',
-                horas: stats?.tiempoRetardo ?? '0',
+                horas: stats?.totalHorasAusencias ?? '0',
               ),    
             ],
           ),

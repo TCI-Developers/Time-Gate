@@ -117,7 +117,7 @@ class AttendanceCardTwo extends StatelessWidget {
                 children: [
                   Text('Horas', 
                     style: textJt16bold400Secondary.copyWith(color: color, fontWeight: FontWeight.w900, fontSize: 16*fontSizedGrow), softWrap: true, maxLines: null,),
-                  Text(horas, 
+                  Text('$horas hrs', 
                     style: textJt13bold400Secondary, softWrap: true, maxLines: null,),
                   Text(text, 
                     style: textJt11bold400Secondary.copyWith(height: .9, fontSize: 13*fontSizedGrow), softWrap: true, maxLines: null,)

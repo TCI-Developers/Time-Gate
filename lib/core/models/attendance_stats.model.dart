@@ -19,6 +19,7 @@ class AttendanceStats {
   final double? permisosPermitidos;
   final double? totalVacaciones;
   final String? tiempoTomado;
+  final String? totalHorasAusencias;
   final double? diasExtra;
   final double? ausenciasPermitidas;
   final List<String>? fechaAsistencia;
@@ -46,7 +47,8 @@ class AttendanceStats {
     this.tiempoTomado,
     this.diasExtra,
     this.ausenciasPermitidas,
-    this.fechaAsistencia
+    this.fechaAsistencia,
+    this.totalHorasAusencias
     
   });
   
@@ -64,6 +66,7 @@ class AttendanceStats {
       totalAsistencias: json['total_asistencias']?.toDouble(),
       horasPermisos: json['horas_permisos'],
       horasExtra: json['horas_extra'],
+      totalHorasAusencias: json['total_ausencias_horas']?.toString(),
       totalAusencias: json['total_ausencias']?.toDouble(),
       retardosPermitidos: json['retardos_permitidos']?.toDouble(),
       permisosPermitidos: json['permisos_permitidos']?.toDouble(),

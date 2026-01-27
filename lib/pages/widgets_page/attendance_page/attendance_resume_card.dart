@@ -28,9 +28,9 @@ class AttendanceResumeCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              _CheckTime(title: 'Horas Trabajadas', text: hoursWorked, border: false),
-              _CheckTime(title: 'Horas de Permiso', text: leaveHours, border: true),
-              _CheckTime(title: 'Horas Extra', text: overtime, border: false),
+              _CheckTime(title: 'Horas Trabajadas', text: '$hoursWorked h', border: false),
+              _CheckTime(title: 'Horas de Permiso', text: '$leaveHours h', border: true),
+              _CheckTime(title: 'Horas Extra', text: '$overtime h', border: false),
             ],
           ),
           const SizedBox(height: 20,),
@@ -43,9 +43,9 @@ class AttendanceResumeCard extends StatelessWidget {
           const SizedBox(height: 20,),
           Row(
             children: [
-              _CheckTime(title: 'Días Trabajados', text: daysWorked.toString(), border: false),
-              _CheckTime(title: 'Días de Permiso', text: leaveDays.toString(), border: true),
-              _CheckTime(title: 'Días Extra', text: extraDays.toString(), border: false),
+              _CheckTime(title: 'Días Trabajados', text: '${daysWorked.toString()} Días', border: false),
+              _CheckTime(title: 'Días de Permiso', text: '${leaveDays.toString()} Días', border: true),
+              _CheckTime(title: 'Días Extra', text: '${extraDays.toString()} Días', border: false),
             ],
           ),
         ],
