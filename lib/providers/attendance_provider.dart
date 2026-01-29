@@ -32,8 +32,11 @@ class AttendanceProvider with ChangeNotifier {
       );
 
       stats = result.stats;
-      entries = result.data;     
+      entries = result.data;    
+      print('entreeeeeeee'); 
     } catch (e) {
+      stats = null;
+      entries = [];
       errorMessage = e is Exception 
       ? e.toString().replaceAll('Exception: ', '') 
       : 'Ocurrió un error inesperado';
@@ -112,8 +115,21 @@ class AttendanceProvider with ChangeNotifier {
 
   void clear() {
     stats = null;
-    entries.clear();
+    entries=[];
     errorMessage = null;
-    notifyListeners();
+    successMessage = null;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (hasListeners) {
+        notifyListeners();
+      }
+    });
+  }
+
+  void clearSilent() {
+    stats = null;
+    entries = [];
+    errorMessage = null;
+    successMessage = null;
+
   }
 }

@@ -4,6 +4,7 @@ import 'package:time_gate/core/models/attendance_stats.model.dart';
 import 'package:time_gate/pages/widgets_page/attendance_page/attendance_workpermits_subpage.dart';
 import 'package:time_gate/pages/widgets_page/widgets_page.dart';
 import 'package:time_gate/providers/attendance_provider.dart';
+import 'package:time_gate/providers/auth_provider.dart';
 import 'package:time_gate/providers/tabbar_provider.dart';
 import 'package:time_gate/themes/custom_styles.dart';
 import 'package:time_gate/utils/calendar_data.dart';
@@ -24,33 +25,22 @@ class _AttendancePageState extends State<AttendancePage> {
   DateTime _currentFocusedDate = DateTime.now();
 
   @override
-void initState() {
-  super.initState();
+  void initState() {
+    super.initState();
+    
+  }
   
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    final tabProvider = context.read<TabbarProvider>();
-    final attendanceProv = context.read<AttendanceProvider>();
-    if (tabProvider.selectedMEnuOption == 1 && 
-        attendanceProv.entries.isEmpty && 
-        !attendanceProv.isLoading) {
-      _fetchAttendance();
-    }
-  });
-}
-  
-
   void _fetchAttendance() {
     final attendanceProv = context.read<AttendanceProvider>();
     if (!mounted || attendanceProv.isLoading) return;
-    
+
+    attendanceProv.entries = []; 
+
     String type = 'asistencia';
     if (tabIndex == 1) type = 'vacaciones';
     if (tabIndex == 2) type = 'permisos';
-    // if (tabIndex == 3) type = 'ausencias';
 
-    attendanceProv.clear();
-
-    context.read<AttendanceProvider>().loadAttendance(
+    attendanceProv.loadAttendance(
       type: type,
       month: _currentFocusedDate.month,
       year: _currentFocusedDate.year,
@@ -75,7 +65,30 @@ void initState() {
   @override
   Widget build(BuildContext context) {
     final attendanceProv = context.watch<AttendanceProvider>();
+    final tabProvider = context.watch<TabbarProvider>();
+
+    final authProv = context.watch<AuthProvider>();
+
+    // if (tabProvider.selectedMEnuOption == 1 &&
+    //   authProv.token != null &&
+    //   attendanceProv.stats == null &&
+    //   !attendanceProv.isLoading) {
+    
+    //   Future.microtask(() => _fetchAttendance());
+    // }
+    if (tabProvider.selectedMEnuOption == 1) {
+      if (authProv.token != null && attendanceProv.stats == null && !attendanceProv.isLoading) {
+        Future.microtask(() => _fetchAttendance());
+      }
+    }else {
+      if (tabIndex != 0) {
+        tabIndex = 0; 
+        attendanceProv.clearSilent();
+      }
+    }
+
     final stats = attendanceProv.stats;
+
     final List<VacacionRange> vacacionesRangos = stats?.fechaVacaciones ?? [];
 
     final double maxContainerWidth = getMaxContentWidth(context);
@@ -109,7 +122,7 @@ void initState() {
                       Text(
                         tabIndex == 0 
                         ? 'Asistencia'
-                        : tabIndex == 1 
+                        : tabIndex == 1
                         ? 'Vacaciones'
                         : 'Permisos', 
                         style: titleOsw30Bold500Secondary.copyWith(fontSize: 30*fontSizedGrow),
@@ -197,7 +210,3 @@ void initState() {
     );
   }
 }
-
-
-
-

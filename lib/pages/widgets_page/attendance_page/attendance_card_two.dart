@@ -29,10 +29,9 @@ class AttendanceCardTwo extends StatelessWidget {
 
     double progressRatio = currentProgress / maxProgress;
 
-     double circleSize = 73.0*fontSizedGrow;
-     double borderWidth = 3.0*fontSizedGrow; 
+    double circleSize = 73.0*fontSizedGrow;
+    double borderWidth = 3.0*fontSizedGrow; 
      
-
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(10),

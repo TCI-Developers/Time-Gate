@@ -246,13 +246,10 @@ class _HomePageState extends State<HomePage> {
                                       : (day.type ?? "").toLowerCase() =="ausencia" ? const Color.fromARGB(255, 203, 63, 53)
                                       : (day.type ?? "").toLowerCase() =="vacaciones" ? Colors.amberAccent
                                       : (day.type ?? "").toLowerCase() =="retardo" ? AppTheme.red
-                                      : (day.type ?? "").toLowerCase() =="descanso" ? AppTheme.primary
                                       : Colors.transparent 
                                   );
                                 }).toList(),
                               )
-                              
-          
                             ],
                           ),
                         ),

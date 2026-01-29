@@ -17,7 +17,7 @@ class ApiClient {
   ApiClient._internal() {
     _dio = Dio(
       BaseOptions(
-        baseUrl: 'https://daa17716efbd.ngrok-free.app/api',
+        baseUrl: 'https://21795e265791.ngrok-free.app/api',
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
         headers: {
@@ -31,7 +31,11 @@ class ApiClient {
       InterceptorsWrapper(
         onError: (error, handler) async {
           final status = error.response?.statusCode;
+          final bool isSilent = error.requestOptions.extra['silent'] ?? false;
           if (status == 401) {
+
+            if (isSilent) return handler.next(error);
+
             final ctx = navigatorKey.currentContext;
             
             if (ctx != null) {
@@ -57,7 +61,7 @@ class ApiClient {
               // Pero necesitamos la instancia real. Si no la hay, no podemos hacer mucho más que navegar.
               // navigatorKey.currentState?.pushNamedAndRemoveUntil('login', (route) => false);
             }
-            return;
+            return handler.reject(error);
           }
           return handler.next(error);
         },
@@ -76,8 +80,9 @@ class ApiClient {
   Future<Response> get(
     String endpoint, {
     Map<String, dynamic>? queryParams,
+    Options? options,
   }) async {
-    return await _dio.get(endpoint, queryParameters: queryParams);
+    return await _dio.get(endpoint, queryParameters: queryParams, options: options,);
   }
 
   Future<Response> post(String endpoint, Map<String, dynamic> data) async {

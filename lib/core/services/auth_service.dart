@@ -35,13 +35,37 @@ class AuthService {
       }
   }
 
-  Future<bool> checkSession() async{
-    try {
-      final response = await apiClient.get('/auth-token');
-      if(response.data['message']=="ok")return true;
-      return false;
+  // Future<bool> checkSession() async{
+  //   try {
+  //     final response = await apiClient.get('/auth-token');
+  //     if(response.data['message']=="ok")return true;
+  //     return false;
       
+  //   } on DioException catch (e) {
+  //     final msg = e.response?.data["message"] ?? "Error de conexión";
+  //     throw Exception(msg);
+  //   }
+  // }
+
+  Future<bool> checkSession() async {
+    try {
+      // Agregamos las opciones con el extra 'silent'
+      final response = await apiClient.get(
+        '/auth-token',
+        options: Options(extra: {'silent': true}),
+      );
+
+      // Tu lógica original de retorno
+      if (response.data['message'] == "ok") return true;
+      return false;
+        
     } on DioException catch (e) {
+      // Si es un 401 y fue silencioso, simplemente retornamos false sin lanzar excepción
+      if (e.response?.statusCode == 401) {
+        return false;
+      }
+      
+      // Para otros errores de conexión o servidor, mantenemos tus mensajes
       final msg = e.response?.data["message"] ?? "Error de conexión";
       throw Exception(msg);
     }

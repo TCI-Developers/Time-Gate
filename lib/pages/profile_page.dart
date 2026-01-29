@@ -4,7 +4,6 @@ import 'package:time_gate/providers/profile_provider.dart';
 import 'package:time_gate/providers/tabbar_provider.dart';
 import 'package:time_gate/themes/custom_styles.dart';
 import 'package:time_gate/utils/responsive_utils.dart';
-import 'package:time_gate/widgets/logout_button.dart';
 import 'package:time_gate/widgets/widgets.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -209,9 +208,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ],
                     ),
-
-                    const SizedBox(height: 20),
-                    const LogoutButton(),
                   ],
                 ),
               ),

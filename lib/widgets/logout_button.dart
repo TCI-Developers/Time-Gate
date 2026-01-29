@@ -16,16 +16,7 @@ class LogoutButton extends StatelessWidget {
       onPressed: () async {
         final authProvider =
             Provider.of<AuthProvider>(context, listen: false);
-
         await authProvider.logout();
-
-        if (context.mounted) {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            'login',
-            (_) => false,
-          );
-        }
       },
     );
   }

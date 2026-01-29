@@ -43,10 +43,8 @@ class AuthProvider with ChangeNotifier {
   if (token == null) return false;
   
   _authService.apiClient.setToken(token!);
-  print('mrto swui mrto');
   // final isValid = await _authService.checkSession();
   final isValid = await _authService.checkSession().timeout(const Duration(seconds: 8));
-  print('is validdddddddddddddddddd: $isValid');
   if (!isValid) {
     await logout();
     return false;
