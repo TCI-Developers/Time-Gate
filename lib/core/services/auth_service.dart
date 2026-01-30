@@ -35,18 +35,6 @@ class AuthService {
       }
   }
 
-  // Future<bool> checkSession() async{
-  //   try {
-  //     final response = await apiClient.get('/auth-token');
-  //     if(response.data['message']=="ok")return true;
-  //     return false;
-      
-  //   } on DioException catch (e) {
-  //     final msg = e.response?.data["message"] ?? "Error de conexión";
-  //     throw Exception(msg);
-  //   }
-  // }
-
   Future<bool> checkSession() async {
     try {
       // Agregamos las opciones con el extra 'silent'

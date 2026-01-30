@@ -38,33 +38,41 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<bool> loadSession() async {
-  token = await TokenStorage.getToken();
-  print(token);
-  if (token == null) return false;
-  
-  _authService.apiClient.setToken(token!);
-  // final isValid = await _authService.checkSession();
-  final isValid = await _authService.checkSession().timeout(const Duration(seconds: 8));
-  if (!isValid) {
-    await logout();
-    return false;
-  }
+    token = await TokenStorage.getToken();
+    print(token);
+    if (token == null) return false;
+    
+    _authService.apiClient.setToken(token!);
+    
+    try {
+      final isValid = await _authService.checkSession().timeout(const Duration(seconds: 8));
+      if (!isValid) {
+        await logout();
+        return false;
+      }
+    } catch (_) {
+      await logout(); // Si hay timeout, mejor desloguear por seguridad
+      return false;
+    }
 
-  notifyListeners();
-  return true;
+    notifyListeners();
+    return true;
   }
 
 
   Future<void> logout([BuildContext? context]) async {
-    if (context != null && context.mounted) {
-      clearAllProviders(context); 
-    }
-    
-    token = null;          
+      
+    token = null;       
     errorMessage = null;   
-    isLoading = false;
+    isLoading = false; 
+
     await TokenStorage.deleteToken();
     _authService.apiClient.clearToken();
+    
+    if (context != null && context.mounted) {
+      clearAllProviders(context); 
+    }  
+    
     notifyListeners();
 
     navigatorKey.currentState?.pushNamedAndRemoveUntil('login', (route) => false);

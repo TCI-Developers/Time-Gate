@@ -118,11 +118,9 @@ class AttendanceProvider with ChangeNotifier {
     entries=[];
     errorMessage = null;
     successMessage = null;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (hasListeners) {
+    if (hasListeners) {
         notifyListeners();
-      }
-    });
+    }
   }
 
   void clearSilent() {

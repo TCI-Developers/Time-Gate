@@ -11,13 +11,11 @@ class ApiClient {
   factory ApiClient() => _instance;
 
   late final Dio _dio;
-
-
-
+  bool _isDialogShowing = false;
   ApiClient._internal() {
     _dio = Dio(
       BaseOptions(
-        baseUrl: 'https://21795e265791.ngrok-free.app/api',
+        baseUrl: 'https://377a69498ecc.ngrok-free.app/api',
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
         headers: {
@@ -32,13 +30,15 @@ class ApiClient {
         onError: (error, handler) async {
           final status = error.response?.statusCode;
           final bool isSilent = error.requestOptions.extra['silent'] ?? false;
-          if (status == 401) {
+          final String path = error.requestOptions.path;
+          if (status == 401 && !_isDialogShowing && !path.contains('/tenant-login')) {
 
             if (isSilent) return handler.next(error);
 
             final ctx = navigatorKey.currentContext;
             
             if (ctx != null) {
+              _isDialogShowing = true;
               await showDialog(
                 context: ctx,
                 barrierDismissible: false,
@@ -47,9 +47,10 @@ class ApiClient {
                   content: const Text('Tu sesión ha expirado. Inicia sesión nuevamente.'),
                   actions: [
                     TextButton(
-                      onPressed: () async {
+                      onPressed: ()  {
+                        _isDialogShowing = false;
                         Navigator.of(ctx).pop();
-                        await ctx.read<AuthProvider>().logout(ctx); 
+                        ctx.read<AuthProvider>().logout(ctx); 
                       },
                       child: const Text('Aceptar'),
                     ),

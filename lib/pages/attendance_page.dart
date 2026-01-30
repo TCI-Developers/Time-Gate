@@ -64,23 +64,21 @@ class _AttendancePageState extends State<AttendancePage> {
   
   @override
   Widget build(BuildContext context) {
+
+    final authProv = context.watch<AuthProvider>();
+    if (authProv.token == null) return const Scaffold();
+
     final attendanceProv = context.watch<AttendanceProvider>();
     final tabProvider = context.watch<TabbarProvider>();
 
-    final authProv = context.watch<AuthProvider>();
-
-    // if (tabProvider.selectedMEnuOption == 1 &&
-    //   authProv.token != null &&
-    //   attendanceProv.stats == null &&
-    //   !attendanceProv.isLoading) {
     
-    //   Future.microtask(() => _fetchAttendance());
-    // }
+
     if (tabProvider.selectedMEnuOption == 1) {
       if (authProv.token != null && attendanceProv.stats == null && !attendanceProv.isLoading) {
         Future.microtask(() => _fetchAttendance());
       }
-    }else {
+    }
+    else {
       if (tabIndex != 0) {
         tabIndex = 0; 
         attendanceProv.clearSilent();
