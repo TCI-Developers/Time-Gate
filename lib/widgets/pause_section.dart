@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:time_gate/providers/home_provider.dart';
+import 'package:time_gate/themes/app_theme.dart';
 import 'package:time_gate/utils/responsive_utils.dart';
 import 'dart:math' show pi; 
 import 'check_button.dart'; 
@@ -104,69 +105,23 @@ class _PauseSectionState extends State<PauseSection> {
                 child: SizedBox(
                   width: buttonWidth,
                   child: PauseMenuForm(
-                    onOptionSelected: (option) async {
-                
-                      final provider = context.read<HomeProvider>();
-                      final ok = await provider.pause(activity: option);
-                      if (!mounted) return;
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext dialogContext) => AlertDialog(
-                          title: Text(ok ? 'Éxito' : 'Error'),
-                          content: Text(
-                            ok 
-                              ? (provider.successMessage ?? 'Operación realizada correctamente') 
-                              : (provider.errorMessage ?? 'Ocurrió un error inesperado perro'),
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(dialogContext);
-                                if (ok) {
-                                  provider.loadHome();
-                                } else {
-                                  
-                                }
-                              },
-                              child: const Text('Aceptar'),
-                            ),
-                          ],
-                          
-                        ),
-                      );
+                    onOptionSelected: (option) {
+                      if (option == 'Otra') {
+                        _closeMenu();
+                        // Esperamos un pelín para que el menú azul se quite y no haya lag
+                        Future.delayed(const Duration(milliseconds: 250), () {
+                          if (mounted) _showOtraModal(context); 
+                        });
+                        return;
+                      }
                       
+                      // Si es Comida o Trayecto, procesamos directo
+                      _procesarPausa(option);
                       _closeMenu();
                     },
-                    onSave: (save)async{
-                      final provider = context.read<HomeProvider>();
-                      final ok = await provider.pause(activity: save);
-                      if (!mounted) return;
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext dialogContext) => AlertDialog(
-                          title: Text(ok ? 'Éxito' : 'Error'),
-                          content: Text(
-                            ok 
-                              ? (provider.successMessage ?? 'Operación realizada correctamente') 
-                              : (provider.errorMessage ?? 'Ocurrió un error inesperado perro'),
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(dialogContext);
-                                if (ok) {
-                                  provider.loadHome();
-                                } else {
-                                  
-                                }
-                              },
-                              child: const Text('Aceptar'),
-                            ),
-                          ],
-                          
-                        ),
-                      );
-                       _closeMenu();
+                    onSave: (save) {
+                      // Si viene del modal, procesamos el texto escrito
+                      _procesarPausa(save);
                     },
                   ),
                 ),
@@ -222,6 +177,110 @@ class _PauseSectionState extends State<PauseSection> {
             child: _buildAnimatedCheckButton(menuIsVisible: menuIsVisible, fontSizedGrow : fontSizedGrow),
           ),
         ),
+      ),
+    );
+  }
+
+  void _showOtraModal(BuildContext context) {
+    final TextEditingController controller = TextEditingController();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20))
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom + 20
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 10, 10, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Otra actividad', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
+                      ],
+                    ),
+                  ),
+                  const Divider(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        TextField(
+                          controller: controller,
+                          maxLines: 3,
+                          autofocus: true,
+                          onChanged: (val) => setModalState(() {}),
+                          decoration: InputDecoration(
+                            hintText: 'Escribe el motivo...',
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                        ),
+                        const SizedBox(height: 15),
+                        ElevatedButton(
+                          onPressed: controller.text.trim().isEmpty 
+                            ? null 
+                            : () {
+                                final textoEscrito = controller.text.trim();
+                                Navigator.pop(context); // Cierra modal
+                                
+                                // USA ESTA: Es la que ya centraliza todo
+                                _procesarPausa(textoEscrito);
+                              },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppTheme.primary,
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          ),
+                          child: const Text('GUARDAR', style: TextStyle(color: Colors.white)),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+void _procesarPausa(String valor) async {
+    final provider = context.read<HomeProvider>();
+    final ok = await provider.pause(activity: valor);
+    
+    if (!mounted) return;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Evita que lo cierren por accidente
+      builder: (BuildContext dialogContext) => AlertDialog(
+        title: Text(ok ? 'Éxito' : 'Error'),
+        content: Text(
+          ok 
+            ? (provider.successMessage ?? 'Operación realizada correctamente') 
+            : (provider.errorMessage ?? 'Ocurrió un error inesperado perro'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              if (ok) provider.loadHome();
+            },
+            child: const Text('Aceptar'),
+          ),
+        ],
       ),
     );
   }
