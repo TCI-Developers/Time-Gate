@@ -12,16 +12,19 @@ class TabsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold( 
-      
-      body: Stack(
-        children: [
-          _HomeBody(), 
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: CustomNavigatorbar(),
-          ), 
-        ],
+    return SafeArea(
+      top: false,
+      child: const Scaffold( 
+        
+        body: Stack(
+          children: [
+            _HomeBody(), 
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: CustomNavigatorbar(),
+            ), 
+          ],
+        ),
       ),
     );
   }

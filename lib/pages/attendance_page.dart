@@ -108,7 +108,7 @@ class _AttendancePageState extends State<AttendancePage> {
         RefreshIndicator(
           onRefresh: () async => _fetchAttendance(),
           child: SingleChildScrollView(
-            padding: const EdgeInsets.only(bottom: 60),
+            padding: const EdgeInsets.only(bottom: 80),
             physics: const AlwaysScrollableScrollPhysics(),
             child: SafeArea(
               child: Center(

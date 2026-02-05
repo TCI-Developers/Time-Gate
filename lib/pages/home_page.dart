@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
         RefreshIndicator(
           onRefresh: () async => await attendance.loadHome(),
           child: SingleChildScrollView(
-            padding: const EdgeInsets.only(bottom: 60),
+            padding: const EdgeInsets.only(bottom: 80),
             child: SafeArea(
                 child: Center(
                   child: Container(
