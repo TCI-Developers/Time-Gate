@@ -52,8 +52,7 @@ class MonthlyRegistrationCard extends StatelessWidget {
                SizedBox(
                   width: 40*fontSizedGrow,
                   height: 40*fontSizedGrow,
-                  child: CircularProgressIndicator(
-                    // value: (1.0 - (ausencias / ausenciasPermitidas)),                    
+                  child: CircularProgressIndicator(                 
                     value: (ausenciasPermitidas > 0) ? (1.0 - (ausencias / ausenciasPermitidas)) : 1.0,                 
                     strokeWidth: 4,                   
                     backgroundColor: const Color.fromARGB(255, 187, 51, 41), 
@@ -63,15 +62,14 @@ class MonthlyRegistrationCard extends StatelessWidget {
               SizedBox(
                   width: 70*fontSizedGrow,
                   height: 70*fontSizedGrow,
-                  child: CircularProgressIndicator(
-                    // value: (1.0 - (asistencia/asistenciasMensuales)),                    
+                  child: CircularProgressIndicator(                
                     value: (ausenciasPermitidas > 0) ? (1-(vacaciones / totalVacaciones)) : 1.0,                    
                     strokeWidth: 4,                   
                     backgroundColor: Colors.yellow, 
                     valueColor: AlwaysStoppedAnimation<Color>(const Color.fromARGB(255, 255, 193, 193)),
                   ),
                 ),
-               SizedBox(
+              SizedBox(
                   width: 105*fontSizedGrow,
                   height: 105*fontSizedGrow,
                   child: CircularProgressIndicator(
@@ -81,7 +79,7 @@ class MonthlyRegistrationCard extends StatelessWidget {
                     backgroundColor: const Color.fromARGB(255, 54, 125, 56), 
                     valueColor: AlwaysStoppedAnimation<Color>(const Color.fromARGB(255, 255, 193, 193)),
                   ),
-                ),
+              ),
             ],
           ),
           const SizedBox(height: 10,),

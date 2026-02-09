@@ -15,7 +15,7 @@ class ApiClient {
   ApiClient._internal() {
     _dio = Dio(
       BaseOptions(
-        baseUrl: 'https://79533191ff60.ngrok-free.app/api',
+        baseUrl: 'https://3ae7-187-142-91-206.ngrok-free.app/api',
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
         headers: {
@@ -33,6 +33,9 @@ class ApiClient {
           final String path = error.requestOptions.path;
           if (status == 401 && !_isDialogShowing && !path.contains('/tenant-login')) {
 
+            if (_isDialogShowing) {
+              return handler.reject(error);
+            }
             if (isSilent) return handler.next(error);
 
             final ctx = navigatorKey.currentContext;
@@ -48,7 +51,7 @@ class ApiClient {
                   actions: [
                     TextButton(
                       onPressed: ()  {
-                        _isDialogShowing = false;
+                        // _isDialogShowing = false;
                         Navigator.of(ctx).pop();
                         ctx.read<AuthProvider>().logout(ctx); 
                       },
@@ -71,6 +74,7 @@ class ApiClient {
   }
 
   void setToken(String token) {
+    _isDialogShowing = false;
     _dio.options.headers['Authorization'] = 'Bearer $token';
   }
 

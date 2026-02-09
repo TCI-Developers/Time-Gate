@@ -48,7 +48,7 @@ class AttendanceAttendanceSubage extends StatelessWidget {
                           asistencia: stats?.diasTrabajados ?? 0,
                           vacaciones: stats?.vacacionesTomadas ?? 0,
                           ausencias: stats?.totalAusencias ?? 0,
-                          asistenciasMensuales: stats?.asistenciasMensuales ?? 0,
+                          asistenciasMensuales: stats?.totalAsistencias ?? 0,
                           totalVacaciones: stats?.totalVacaciones ?? 1,
                           ausenciasPermitidas: stats?.ausenciasPermitidas ?? 0,
                         )
@@ -98,19 +98,11 @@ class AttendanceAttendanceSubage extends StatelessWidget {
             ...data.map((entry) => Padding(
               padding: const EdgeInsets.only(bottom: 15),
               child: AttendanceCardDay(
-                // 1. Usamos checkIn y checkOut del modelo
                 checkin: entry.checkIn ?? '--:--', 
-                checkout: entry.checkOut ?? '--:--',
-                
-                // 2. Convertimos la lista de pausas a un solo String separado por guiones
+                checkout: entry.checkOut ?? '--:--',            
                 pause: (entry.pause ?? []).isEmpty ? 'Sin pausas' : entry.pause!.join(' - '),
-                
-                // 3. Usamos totalTrabajado (el dynamic lo pasamos a String)
                 hoursworked: entry.totalTrabajado?.toString() ?? '0h 00m',
-                
-                // 4. Si tu widget AttendanceCardDay tiene campo para fecha o día:
                 date: "${entry.day} | ${entry.date}", 
-
                 type: (entry.type == null || entry.type == "") ? 'por definir' : entry.type ?? '',
               ),
             )),
