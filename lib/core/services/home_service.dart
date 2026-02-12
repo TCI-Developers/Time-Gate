@@ -12,10 +12,13 @@ class HomeService {
   })> getHome() async {
     try {
       final response = await apiClient.get('/weekly-summary');
-      
+      print('meeeeeero');
+      print(response);
       if (response.data['status'] != 'ok') {
         throw Exception('Respuesta inválida');
       }
+
+      print(response);
 
       final HomeUser user =
           HomeUser.fromJson(response.data['user']);
