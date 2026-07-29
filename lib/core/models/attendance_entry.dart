@@ -40,7 +40,7 @@ class AttendanceEntry {
       checkId: json['check_id'],
       checkIn: json['check_in'] ??'',
       checkOut: json['check_out'] ??'',
-      pause: List<String>.from(json['pause'] ?? []),
+      pause: List<String>.from(json['pauses'] ?? []),
       totalTrabajado: json['total_trabajado'],
       totalTrabajadoReloj: json['total_trabajado_reloj'],
       type: json['type'],

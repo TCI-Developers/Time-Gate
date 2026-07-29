@@ -217,7 +217,7 @@ class _HomePageState extends State<HomePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsetsGeometry.only(left: 8),
+                                padding: const EdgeInsets.only(left: 8),
                                 child: Text(
                                   'Resumen de la semana',
                                   style: titleOsw30Bold30Secondary.copyWith(
@@ -228,7 +228,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsetsGeometry.only(left:8),
+                                padding: const EdgeInsets.only(left:8),
                                 child: Text('$mesNombre $anioFormateado', style: textJt16bold400Secondary.copyWith(
                                 fontSize: 16 * fontSizedGrow,
                               ),),
@@ -283,4 +283,5 @@ class _HomePageState extends State<HomePage> {
  
   }
 }
+
 

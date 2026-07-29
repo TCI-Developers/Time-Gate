@@ -40,6 +40,7 @@ class AttendanceProvider with ChangeNotifier {
       errorMessage = e is Exception 
       ? e.toString().replaceAll('Exception: ', '') 
       : 'Ocurrió un error inesperado';
+      
     } finally {
       isLoading = false;
       notifyListeners();
@@ -80,6 +81,7 @@ class AttendanceProvider with ChangeNotifier {
 
     Future<bool> sendPermitRequest({
     required DateTime date,
+    required int hours,
   }) async {
     try {
       isLoading = true;
@@ -93,6 +95,7 @@ class AttendanceProvider with ChangeNotifier {
       final response = await _service.requestPermit(
         date: formattedDate,
         time: formattedTime,
+        hours: hours,
       );
 
       if (response['status'] == 'error') {

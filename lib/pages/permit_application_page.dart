@@ -20,6 +20,7 @@ class _PermitApplicationPageState extends State<PermitApplicationPage> {
   TimeOfDay? _selectedTime;
   DateTime _focusedDay = DateTime.now();
   final DateFormat _dateFormat = DateFormat('dd/MM/yyyy');
+  int _selectedHours = 1;
 
   @override
   void initState() {
@@ -120,6 +121,7 @@ class _PermitApplicationPageState extends State<PermitApplicationPage> {
 
     final bool ok = await provider.sendPermitRequest(
       date: fullDateTime,
+      hours: _selectedHours,
     );
 
     if (!mounted) return;
@@ -208,6 +210,17 @@ class _PermitApplicationPageState extends State<PermitApplicationPage> {
                     ],
                   ),
                   const SizedBox(height: 20),
+
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Horas de permiso', style: textOsw14bold500Primary.copyWith(fontSize: 14 * fontSizedGrow)),
+                      const SizedBox(height: 8),
+                      _buildHoursDropdown(),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+
                   ReusableCalendar(
                     key: ValueKey('perm-cal-${_focusedDay.month}-${_startDate != null}'),
                     faltas: const [], 
@@ -279,4 +292,44 @@ class _PermitApplicationPageState extends State<PermitApplicationPage> {
       ),
     );
   }
+
+  Widget _buildHoursDropdown() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        boxShadow: const [
+          BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 4)),
+        ],
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.white,
+      ),
+      child: DropdownButtonFormField<int>(
+        initialValue: _selectedHours,
+        icon: const Icon(Icons.keyboard_arrow_down, size: 30, color: AppTheme.secondary),
+        decoration: const InputDecoration(
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.symmetric(vertical: 8),
+        ),
+        style: const TextStyle(
+          fontSize: 13,
+          color: AppTheme.secondary,
+        ),
+        items: List.generate(5, (index) {
+          final val = index + 1;
+          return DropdownMenuItem<int>(
+            value: val,
+            child: Text('$val ${val == 1 ? 'hora' : 'horas'}'),
+          );
+        }),
+        onChanged: (int? newValue) {
+          if (newValue != null) {
+            setState(() {
+              _selectedHours = newValue;
+            });
+          }
+        },
+      ),
+    );
+  }
+
 }

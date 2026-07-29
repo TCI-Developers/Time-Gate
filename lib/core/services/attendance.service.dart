@@ -66,11 +66,13 @@ class AttendanceService {
   Future<Map<String, dynamic>> requestPermit({
     required String date,
     required String time,
+    required int hours,
   }) async {
     try {
       final response = await apiClient.post('/permission', {
         'day': date,
         'time': time,
+        'hours': hours,
       });
 
       // Retornamos el body de la respuesta (response.data)

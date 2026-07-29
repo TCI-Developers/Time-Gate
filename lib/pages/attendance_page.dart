@@ -88,6 +88,8 @@ class _AttendancePageState extends State<AttendancePage> {
     final stats = attendanceProv.stats;
 
     final List<VacacionRange> vacacionesRangos = stats?.fechaVacaciones ?? [];
+    
+   
 
     final double maxContainerWidth = getMaxContentWidth(context);
     final titleOsw30Bold500Secondary = Theme.of(context).textTheme.titleOsw30Bold500Secondary;

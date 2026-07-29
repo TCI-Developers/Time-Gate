@@ -83,7 +83,7 @@ class AttendanceStats {
           : null,
       fechaRetardo: json['fecha_retardos'] != null 
           ? List<String>.from(json['fecha_retardos']) 
-          : null,
+          : [],
       fechaPermisos: json['fecha_permisos'] != null 
           ? List<String>.from(json['fecha_permisos']) 
           : null,

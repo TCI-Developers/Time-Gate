@@ -63,7 +63,7 @@ class AttendanceAttendanceSubage extends StatelessWidget {
             children: [
               AttendanceCardTwo(
                   color: const Color.fromARGB(255, 59, 139, 62), type: 'Asistencias', 
-                  maxProgress: stats?.asistenciasMensuales ?? 1, 
+                  maxProgress: stats?.totalAsistencias ?? 1, 
                   currentProgress: stats?.diasTrabajados ?? 0.0,
                   text: 'de trabajo ordinario',
                   horas: stats?.totalTrabajado ?? '0',

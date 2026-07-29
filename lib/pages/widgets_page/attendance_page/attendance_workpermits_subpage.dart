@@ -28,7 +28,7 @@ class AttendanceWorkpermitsSubpage extends StatelessWidget {
                 child: Text('Permisos', style: titleOsw24Bold500Secondary,)
               ),
               const SizedBox(height: 10,),
-              AttendanceVacationCard( 
+              AttendanceVacationCard(
                 totalDays: '${(stats?.permisosPermitidos ?? 0).toInt().toString()} permisos',
                 usedDays: '${(stats?.permisosTomados ?? 0).toInt().toString()} permisos',
                 remainingDays: '${((stats?.permisosPermitidos ?? 0).toInt() - (stats?.permisosTomados ?? 0).toInt()).toString()} permisos', 

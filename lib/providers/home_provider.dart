@@ -25,11 +25,8 @@ class HomeProvider with ChangeNotifier {
 
       user = result.user;
       days = result.days;
-      print(result);
     } catch (e) {
       errorMessage = e.toString();
-      print('error $errorMessage 21');
-      
     } finally {
       isLoading = false;
       notifyListeners();
