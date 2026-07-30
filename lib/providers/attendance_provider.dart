@@ -33,7 +33,6 @@ class AttendanceProvider with ChangeNotifier {
 
       stats = result.stats;
       entries = result.data;    
-      print('entreeeeeeee'); 
     } catch (e) {
       stats = null;
       entries = [];

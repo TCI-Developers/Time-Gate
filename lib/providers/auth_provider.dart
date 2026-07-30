@@ -39,7 +39,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<bool> loadSession() async {
     token = await TokenStorage.getToken();
-    print(token);
+    //print(token);
     if (token == null) return false;
     
     _authService.apiClient.setToken(token!);
