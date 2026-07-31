@@ -1,4 +1,4 @@
-package com.example.time_gate
+package com.tci.consultoria.time_gate
 
 import io.flutter.embedding.android.FlutterActivity
 
