@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 
-
 class CirclePhoto extends StatelessWidget {
-
   final double maxRadius;
   final String image;
 
-  const CirclePhoto({
-    super.key, required this.maxRadius, required this.image,
-  });
+  const CirclePhoto({super.key, required this.maxRadius, required this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +19,20 @@ class CirclePhoto extends StatelessWidget {
           ),
         ],
       ),
+      //child: CircleAvatar(
+      //maxRadius: maxRadius,
+      //backgroundImage: NetworkImage(
+      //image,
+
+      //),
+      //),
       child: CircleAvatar(
         maxRadius: maxRadius,
-        backgroundImage: NetworkImage(
-          image,
+        backgroundImage: ResizeImage(
+          NetworkImage(image),
+          // Multiplicamos por 2 o 3 para que no pierda calidad en pantallas de alta resolución
+          width: (maxRadius * 3).toInt(),
+          height: (maxRadius * 3).toInt(),
         ),
       ),
     );

@@ -33,9 +33,10 @@ android {
         // TODO: Especifica tu propio Application ID único si vas a subir a la Play Store
         applicationId = "com.tci.consultoria.time_gate"
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        //targetSdk = flutter.targetSdkVersion
+        targetSdk = 36
         versionCode = 2
-        versionName = "1.0.1"
+        versionName = "1.0.2"
     }
 
     // 2. Definir el bloque de firmas (signingConfigs)

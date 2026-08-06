@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:time_gate/pages/pages.dart';
 import 'package:time_gate/providers/attendance_provider.dart';
 import 'package:time_gate/providers/home_provider.dart';
 import 'package:time_gate/providers/profile_provider.dart';
-import 'package:time_gate/providers/tabbar_provider.dart'; 
+import 'package:time_gate/providers/tabbar_provider.dart';
 import 'package:time_gate/themes/app_theme.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:time_gate/utils/navigation_service.dart';
 import './providers/auth_provider.dart';
-
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +18,7 @@ void main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   await initializeDateFormatting();
-
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   runApp(const MyApp());
 }
 
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         navigatorKey: navigatorKey,
         // AuthWrapper decidirá si mostrar Login o Main
-        home: const AuthWrapper(), 
+        home: const AuthWrapper(),
         routes: {
           'main': (_) => const TabsPage(),
           'login': (_) => const LoginPage(),
