@@ -12,7 +12,6 @@ import 'package:time_gate/utils/responsive_utils.dart';
 import 'package:time_gate/widgets/widgets.dart';
 
 class AttendancePage extends StatefulWidget {
-
   const AttendancePage({super.key});
 
   @override
@@ -20,21 +19,19 @@ class AttendancePage extends StatefulWidget {
 }
 
 class _AttendancePageState extends State<AttendancePage> {
-
   int tabIndex = 0;
   DateTime _currentFocusedDate = DateTime.now();
 
   @override
   void initState() {
     super.initState();
-    
   }
-  
+
   void _fetchAttendance() {
     final attendanceProv = context.read<AttendanceProvider>();
     if (!mounted || attendanceProv.isLoading) return;
 
-    attendanceProv.entries = []; 
+    attendanceProv.entries = [];
 
     String type = 'asistencia';
     if (tabIndex == 1) type = 'vacaciones';
@@ -46,13 +43,12 @@ class _AttendancePageState extends State<AttendancePage> {
       year: _currentFocusedDate.year,
     );
   }
-  
+
   List<DateTime> _parseDates(List<String> dates) {
-    if(dates.isEmpty) return[];
+    if (dates.isEmpty) return [];
     try {
       return dates.map((d) => DateTime.parse(d)).toList();
     } catch (e) {
-
       return [];
     }
   }
@@ -60,27 +56,24 @@ class _AttendancePageState extends State<AttendancePage> {
   final DateTime? inicioVacaciones = DateTime(2025, 11, 1);
 
   final DateTime? finVacaciones = DateTime(2025, 11, 10);
-    
-  
+
   @override
   Widget build(BuildContext context) {
-
     final authProv = context.watch<AuthProvider>();
     if (authProv.token == null) return const Scaffold();
 
     final attendanceProv = context.watch<AttendanceProvider>();
     final tabProvider = context.watch<TabbarProvider>();
 
-    
-
     if (tabProvider.selectedMEnuOption == 1) {
-      if (authProv.token != null && attendanceProv.stats == null && !attendanceProv.isLoading) {
+      if (authProv.token != null &&
+          attendanceProv.stats == null &&
+          !attendanceProv.isLoading) {
         Future.microtask(() => _fetchAttendance());
       }
-    }
-    else {
+    } else {
       if (tabIndex != 0) {
-        tabIndex = 0; 
+        tabIndex = 0;
         attendanceProv.clearSilent();
       }
     }
@@ -88,20 +81,25 @@ class _AttendancePageState extends State<AttendancePage> {
     final stats = attendanceProv.stats;
 
     final List<VacacionRange> vacacionesRangos = stats?.fechaVacaciones ?? [];
-    
-   
 
     final double maxContainerWidth = getMaxContentWidth(context);
-    final titleOsw30Bold500Secondary = Theme.of(context).textTheme.titleOsw30Bold500Secondary;
+    final titleOsw30Bold500Secondary = Theme.of(
+      context,
+    ).textTheme.titleOsw30Bold500Secondary;
     final fontSizedGrow = getResponsiveScaleFactor(context);
 
-    final List<DateTime> asistenciasOriginales = _parseDates(stats?.fechaAsistencia ?? []);
+    final List<DateTime> asistenciasOriginales = _parseDates(
+      stats?.fechaAsistencia ?? [],
+    );
     final List<DateTime> retardosList = _parseDates(stats?.fechaRetardo ?? []);
-    final List<DateTime> asistenciasLimpias = asistenciasOriginales.where((asistencia) {
-      return !retardosList.any((retardo) => 
-        asistencia.year == retardo.year && 
-        asistencia.month == retardo.month && 
-        asistencia.day == retardo.day
+    final List<DateTime> asistenciasLimpias = asistenciasOriginales.where((
+      asistencia,
+    ) {
+      return !retardosList.any(
+        (retardo) =>
+            asistencia.year == retardo.year &&
+            asistencia.month == retardo.month &&
+            asistencia.day == retardo.day,
       );
     }).toList();
 
@@ -120,39 +118,42 @@ class _AttendancePageState extends State<AttendancePage> {
                   child: Column(
                     children: [
                       Text(
-                        tabIndex == 0 
-                        ? 'Asistencia'
-                        : tabIndex == 1
-                        ? 'Vacaciones'
-                        : 'Permisos', 
-                        style: titleOsw30Bold500Secondary.copyWith(fontSize: 30*fontSizedGrow),
+                        tabIndex == 0
+                            ? 'Asistencia'
+                            : tabIndex == 1
+                            ? 'Vacaciones'
+                            : 'Permisos',
+                        style: titleOsw30Bold500Secondary.copyWith(
+                          fontSize: 30 * fontSizedGrow,
+                        ),
                       ),
-                      const SizedBox(height: 20,),
-                     
+                      const SizedBox(height: 20),
+
                       ReusableCalendar(
-                        
-                        key: ValueKey('cal-${_currentFocusedDate.month}-${attendanceProv.stats == null}'),
+                        key: ValueKey(
+                          'cal-${_currentFocusedDate.month}-${attendanceProv.stats == null}',
+                        ),
                         faltas: _parseDates(stats?.fechaAusencias ?? []),
                         retardos: retardosList,
-                        asistencias:  asistenciasLimpias.isNotEmpty 
-                          ? asistenciasLimpias 
-                          : _parseDates(stats?.fechaPermisos ?? []), 
+                        asistencias: asistenciasLimpias.isNotEmpty
+                            ? asistenciasLimpias
+                            : _parseDates(stats?.fechaPermisos ?? []),
                         vacacionesRangos: vacacionesRangos,
                         rangeStart: inicioVacaciones,
                         rangeEnd: finVacaciones,
-                        initialFocusedDay: _currentFocusedDate, 
-                    
+                        initialFocusedDay: _currentFocusedDate,
+
                         onPageChanged: (newDate) {
                           setState(() => _currentFocusedDate = newDate);
                           _fetchAttendance();
                         },
                       ),
-                      const SizedBox(height: 20,),
-                      Wrap(  
-                        alignment: WrapAlignment.spaceBetween, 
-                        spacing: 4.0, 
+                      const SizedBox(height: 20),
+                      Wrap(
+                        alignment: WrapAlignment.spaceBetween,
+                        spacing: 4.0,
                         runSpacing: 8.0,
-                      
+
                         children: [
                           GestureDetector(
                             onTap: () {
@@ -161,7 +162,12 @@ class _AttendancePageState extends State<AttendancePage> {
                               });
                               _fetchAttendance();
                             },
-                            child: AttendanceTag(text: 'Asistencias', color: Color(0xFF7e9758),index: 0, currentIndex: tabIndex,)
+                            child: AttendanceTag(
+                              text: 'Asistencias',
+                              color: Color(0xFF7e9758),
+                              index: 0,
+                              currentIndex: tabIndex,
+                            ),
                           ),
                           GestureDetector(
                             onTap: () {
@@ -170,7 +176,12 @@ class _AttendancePageState extends State<AttendancePage> {
                               });
                               _fetchAttendance();
                             },
-                            child: AttendanceTag(text: 'Vacaciones', color: kColorVacaciones,index: 1, currentIndex: tabIndex,)
+                            child: AttendanceTag(
+                              text: 'Vacaciones',
+                              color: kColorVacaciones,
+                              index: 1,
+                              currentIndex: tabIndex,
+                            ),
                           ),
                           GestureDetector(
                             onTap: () {
@@ -179,19 +190,33 @@ class _AttendancePageState extends State<AttendancePage> {
                               });
                               _fetchAttendance();
                             },
-                            child: AttendanceTag(text: 'Permisos', color: kColorSeleccionado,index: 2, currentIndex: tabIndex,)
+                            child: AttendanceTag(
+                              text: 'Permisos',
+                              color: kColorSeleccionado,
+                              index: 2,
+                              currentIndex: tabIndex,
+                            ),
                           ),
-                          AttendanceTag(text: 'Ausencias', color: kColorFalta,index: 3,currentIndex: tabIndex),
+                          //AttendanceTag(text: 'Ausencias', color: kColorFalta,index: 3,currentIndex: tabIndex),
                         ],
                       ),
-                      const SizedBox(height: 20,),
-                
-                      if(tabIndex == 0)
-                        AttendanceAttendanceSubage(data: attendanceProv.entries, stats: stats,)
-                      else if(tabIndex ==1)
-                         AttendanceVacationSubage(data: attendanceProv.entries, stats: stats,)
-                      else if(tabIndex ==2)
-                        AttendanceWorkpermitsSubpage(data: attendanceProv.entries, stats: stats,)
+                      const SizedBox(height: 20),
+
+                      if (tabIndex == 0)
+                        AttendanceAttendanceSubage(
+                          data: attendanceProv.entries,
+                          stats: stats,
+                        )
+                      else if (tabIndex == 1)
+                        AttendanceVacationSubage(
+                          data: attendanceProv.entries,
+                          stats: stats,
+                        )
+                      else if (tabIndex == 2)
+                        AttendanceWorkpermitsSubpage(
+                          data: attendanceProv.entries,
+                          stats: stats,
+                        ),
                     ],
                   ),
                 ),
@@ -200,12 +225,10 @@ class _AttendancePageState extends State<AttendancePage> {
           ),
         ),
         if (attendanceProv.isLoading)
-        Container(
-          color: Colors.black45,
-          child: const Center(
-            child: CircularProgressIndicator(),
+          Container(
+            color: Colors.black45,
+            child: const Center(child: CircularProgressIndicator()),
           ),
-        ),
       ],
     );
   }

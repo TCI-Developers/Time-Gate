@@ -20,7 +20,6 @@ class CustomNavigatorbar extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(40),
-        
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -52,19 +51,19 @@ class CustomNavigatorbar extends StatelessWidget {
               }
             },
           ),
-          _CustomNavButton(
-            icon: CupertinoIcons.list_bullet,
-            label: 'Tarea',
-            index: 2,
-            selectedIndex: currentIndex,
-            onTap: ()=>{},
-          ),
+          //_CustomNavButton(
+          //icon: CupertinoIcons.list_bullet,
+          //label: 'Tarea',
+          //index: 2,
+          //selectedIndex: currentIndex,
+          //onTap: () => {},
+          //),
           _CustomNavButton(
             icon: Icons.account_circle_outlined,
             label: 'Perfil',
             index: 3,
             selectedIndex: currentIndex,
-            onTap: (){
+            onTap: () {
               uiProvider.selectedMEnuOption = 3;
               final profileProv = context.read<ProfileProvider>();
               if (!profileProv.isLoading) {
